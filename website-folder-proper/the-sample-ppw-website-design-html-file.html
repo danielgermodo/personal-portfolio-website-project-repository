@@ -1,23 +1,28 @@
-<!DOCTYPE html<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- TODO: Write a one-sentence description of yourself (shown in search results) -->
+    <meta name="description" content="Portfolio of Your Name — IT student and aspiring developer based in the Philippines.">
     <!-- TODO: Change to your full name -->
     <title>Your Name — Portfolio</title>
 
     <style>
-        /* ── DESIGN TOKENS ─────────────────────────────────── */
+        /* ══════════════════════════════════════════════════════
+           DESIGN TOKENS
+           Change these variables to restyle the entire page.
+           ══════════════════════════════════════════════════════ */
         :root {
             /* Colors — all contrast-checked against their backgrounds */
-            --bg:        #F8F7F4;   /* warm off-white page background          */
-            --bg-card:   #FFFFFF;   /* section / card background               */
-            --text:      #1C1C1C;   /* primary text — near-black, not harsh    */
-            --muted:     #505050;   /* secondary text — 7:1 on white (AAA)     */
-            --accent:    #1B3A5C;   /* navy — headings, buttons                */
-            --gold:      #96681F;   /* amber — labels, links — AA on white     */
-            --border:    #E4E2DC;   /* dividers and card borders               */
-            --focus:     #2E7AD0;   /* bright blue keyboard focus ring         */
+            --bg:        #F8F7F4;   /* warm off-white page background        */
+            --bg-card:   #FFFFFF;   /* section / card background             */
+            --text:      #1C1C1C;   /* primary text                          */
+            --muted:     #505050;   /* secondary text — 7:1 on white (AAA)   */
+            --accent:    #1B3A5C;   /* navy — headings, buttons              */
+            --gold:      #96681F;   /* amber — labels, links (AA on white)   */
+            --border:    #E4E2DC;   /* dividers and card borders             */
+            --focus:     #2E7AD0;   /* bright blue keyboard focus ring       */
             --radius:    8px;
             --max-width: 960px;
 
@@ -25,37 +30,42 @@
              * OFFLINE-SAFE FONT STACKS — sleek, elegant, dyslexia-friendly
              *
              * Display (headings): Palatino → Georgia → serif
-             *   Palatino's open proportions and slight calligraphic quality
-             *   give headings warmth and distinction without being ornate.
+             *   Open proportions and calligraphic warmth; never ornate.
              *
              * Body (text / nav): Optima → Segoe UI → Candara → sans-serif
-             *   Optima is a humanist sans with subtly flared terminals —
-             *   it reads with exceptional clarity. Its open counters and
-             *   unambiguous letterforms (clear l/I distinction) make it
-             *   one of the most dyslexia-friendly offline fonts available.
+             *   Humanist sans with subtly flared terminals. Exceptional
+             *   clarity; unambiguous l / I distinction for dyslexic readers.
              *   Segoe UI and Candara are its closest Windows/Linux equivalents.
              */
             --font-display: Palatino, 'Palatino Linotype', Georgia, 'Times New Roman', serif;
             --font-body:    Optima, 'Segoe UI', Candara, 'Trebuchet MS', sans-serif;
         }
 
-        /* ── RESET ─────────────────────────────────────────── */
+
+        /* ══════════════════════════════════════════════════════
+           RESET & BASE
+           ══════════════════════════════════════════════════════ */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html  { scroll-behavior: smooth; }
-        body  {
+        html { scroll-behavior: smooth; }
+        body {
             font-family: var(--font-body);
             background: var(--bg);
             color: var(--text);
-            font-size: 17px;         /* 17px base — above the 16px accessibility floor */
-            line-height: 1.9;        /* generous leading eases tracking for dyslexia   */
-            word-spacing: 0.04em;    /* slight word spacing reduces crowding           */
+            font-size: 17px;
+            line-height: 1.9;
+            word-spacing: 0.04em;        /* slight word spacing — aids dyslexic reading  */
+            overflow-wrap: break-word;   /* prevents long words from overflowing layouts */
             -webkit-font-smoothing: antialiased;
             text-rendering: optimizeLegibility;
         }
-        img { display: block; max-width: 100%; }
+        /* FIX: height:auto ensures images scale correctly when max-width kicks in */
+        img { display: block; max-width: 100%; height: auto; }
         a   { color: inherit; }
 
-        /* ── SKIP NAVIGATION (screen-reader / keyboard users) ─ */
+
+        /* ══════════════════════════════════════════════════════
+           SKIP NAVIGATION  (keyboard / screen-reader users)
+           ══════════════════════════════════════════════════════ */
         .skip-nav {
             position: absolute; top: -100%; left: 1rem;
             background: var(--accent); color: #fff;
@@ -65,25 +75,29 @@
         }
         .skip-nav:focus { top: 1rem; }
 
-        /* ── GLOBAL FOCUS RING ─────────────────────────────── */
-        /* Visible, high-contrast focus outline for keyboard navigation */
+
+        /* ══════════════════════════════════════════════════════
+           FOCUS RING  (keyboard navigation)
+           ══════════════════════════════════════════════════════ */
         :focus-visible {
             outline: 3px solid var(--focus);
             outline-offset: 3px;
             border-radius: 3px;
         }
 
-        /* ── REDUCED MOTION ────────────────────────────────── */
-        /* Disable all transitions and animations for users who prefer it */
+
+        /* ══════════════════════════════════════════════════════
+           REDUCED MOTION  (OS accessibility setting)
+           ══════════════════════════════════════════════════════ */
         @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                transition: none !important;
-                animation: none !important;
-            }
+            *, *::before, *::after { transition: none !important; animation: none !important; }
             html { scroll-behavior: auto; }
         }
 
-        /* ── NAV ───────────────────────────────────────────── */
+
+        /* ══════════════════════════════════════════════════════
+           NAVIGATION BAR
+           ══════════════════════════════════════════════════════ */
         nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
             height: 64px; display: flex; align-items: center;
@@ -96,6 +110,8 @@
             font-family: var(--font-display); font-size: 1.2rem; font-weight: 600;
             color: var(--accent); text-decoration: none; letter-spacing: .01em;
         }
+
+        /* Desktop nav links */
         .nav-links { list-style: none; display: flex; gap: 2.25rem; }
         .nav-links a {
             text-decoration: none; color: var(--muted);
@@ -103,26 +119,58 @@
             letter-spacing: .12em; text-transform: uppercase;
             transition: color .2s;
         }
-        /* Underline on hover — more legible cue than color alone */
-        .nav-links a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 4px; }
+        /* Underline on hover — visual cue beyond color change alone */
+        .nav-links a:hover {
+            color: var(--accent);
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
 
-        /* ── LAYOUT HELPERS ────────────────────────────────── */
+        /* Hamburger button — hidden on desktop, revealed on mobile */
+        .nav-toggle {
+            display: none;          /* hidden on desktop */
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 36px;
+            height: 36px;
+            padding: 4px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-radius: var(--radius);
+            color: var(--accent);
+        }
+        /* The three bar spans */
+        .nav-toggle span {
+            display: block;
+            height: 2px;
+            background: currentColor;
+            border-radius: 2px;
+            transition: transform .22s ease, opacity .22s ease;
+        }
+
+
+        /* ══════════════════════════════════════════════════════
+           LAYOUT HELPERS  (reused across sections)
+           ══════════════════════════════════════════════════════ */
         .container { max-width: var(--max-width); margin: 0 auto; padding: 0 2rem; }
         section    { padding: 108px 0; }
+        /* FIX: aria-hidden added in HTML; purely decorative */
         hr.divider { border: none; border-top: 1px solid var(--border); }
 
-        /* Decorative uppercase label — wide tracking keeps each letter distinct */
+        /* Small uppercase label above a section heading */
         .section-label {
             display: block; font-size: .72rem; font-weight: 500;
             letter-spacing: .18em; text-transform: uppercase;
             color: var(--gold); margin-bottom: .8rem;
         }
+        /* Default: left-aligned. Contact overrides this below. */
         .section-title {
             font-family: var(--font-display);
             font-size: clamp(1.9rem, 4vw, 2.65rem);
             font-weight: 600; line-height: 1.2;
             color: var(--accent); margin-bottom: 3rem;
-            /* Left-align — never justify headings */
             text-align: left;
         }
 
@@ -148,8 +196,15 @@
             transform: translateY(-2px); box-shadow: 0 6px 20px rgba(27,58,92,.2);
         }
 
-        /* ── HERO ──────────────────────────────────────────── */
-        #hero { min-height: 100vh; display: flex; align-items: center; padding-top: 64px; }
+
+        /* ══════════════════════════════════════════════════════
+           SECTION 1: HERO
+           ══════════════════════════════════════════════════════ */
+        #hero {
+            min-height: 100vh;    /* fallback for older browsers      */
+            min-height: 100dvh;   /* FIX: excludes mobile browser UI  */
+            display: flex; align-items: center; padding-top: 64px;
+        }
         .hero-inner { display: flex; align-items: center; gap: 5rem; }
         .hero-text   { flex: 1; }
 
@@ -165,7 +220,6 @@
             color: var(--accent); letter-spacing: -.01em;
             margin-bottom: 1.35rem;
         }
-        /* Tagline: left-aligned, measured line length, comfortable weight */
         .hero-tagline {
             font-size: 1.1rem; font-weight: 400;
             color: var(--muted); line-height: 1.85;
@@ -173,7 +227,7 @@
         }
         .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
 
-        /* Profile photo frame */
+        /* Circular profile photo frame */
         .photo-frame {
             width: 268px; height: 268px; border-radius: 50%;
             background: var(--border); border: 4px solid var(--bg-card);
@@ -184,21 +238,22 @@
         .photo-frame .placeholder-icon { width: 90px; height: 90px; opacity: .22; }
         .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* ── ABOUT ─────────────────────────────────────────── */
+
+        /* ══════════════════════════════════════════════════════
+           SECTION 2: ABOUT  (bio + skills)
+           ══════════════════════════════════════════════════════ */
         #about { background: var(--bg-card); }
 
         .about-grid {
             display: grid; grid-template-columns: 1fr 1fr;
             gap: 5rem; align-items: start;
         }
-        /* Body paragraphs: measured line length and generous spacing */
         .about-bio-text p {
-            color: var(--muted);
-            font-size: 1rem;
-            line-height: 1.95;       /* extra leading for paragraph readability */
-            margin-bottom: 1.15rem;
-            max-width: 52ch;         /* ~65 characters — optimal reading measure */
-            text-align: left;        /* always left-aligned, never justified     */
+            color: var(--muted); font-size: 1rem;
+            line-height: 1.95; margin-bottom: 1.15rem;
+            max-width: 52ch;     /* ~65 chars — optimal reading measure   */
+            text-align: left;    /* always left; never justified           */
+            hyphens: auto;       /* cleaner wrapping for long words        */
         }
         .about-bio-text p:last-child { margin-bottom: 0; }
 
@@ -213,7 +268,10 @@
         }
         .skill-tag:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-        /* ── PROJECTS ──────────────────────────────────────── */
+
+        /* ══════════════════════════════════════════════════════
+           SECTION 3: PROJECTS
+           ══════════════════════════════════════════════════════ */
         .projects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(278px, 1fr));
@@ -233,19 +291,17 @@
             display: flex; align-items: center; justify-content: center;
             overflow: hidden; flex-shrink: 0;
         }
-        .project-thumbnail img  { width: 100%; height: 100%; object-fit: cover; }
-        .thumbnail-placeholder  {
+        .project-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+        .thumbnail-placeholder {
             font-size: .72rem; color: #ABABAB;
             letter-spacing: .1em; text-transform: uppercase;
         }
 
         .project-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
-
         .project-title {
             font-family: var(--font-display); font-size: 1.25rem; font-weight: 600;
             color: var(--text); margin-bottom: .5rem; line-height: 1.3;
         }
-        /* Project descriptions: left-aligned, comfortable size */
         .project-desc {
             font-size: .92rem; line-height: 1.8;
             color: var(--muted); flex: 1; margin-bottom: 1rem;
@@ -257,7 +313,8 @@
             font-size: .73rem; font-weight: 500; padding: .2rem .65rem;
             border-radius: 4px; letter-spacing: .03em;
         }
-        /* Project link — arrow slides on hover; underline makes it clear it's a link */
+        /* Arrow nudges right on hover; display:inline-block on ::after prevents the
+           arrow from inheriting the link's underline decoration */
         .project-link {
             display: inline-flex; align-items: center; gap: .45rem;
             text-decoration: underline; text-underline-offset: 3px;
@@ -265,70 +322,172 @@
             transition: gap .2s; margin-top: auto;
         }
         .project-link:hover { gap: .8rem; }
-        .project-link::after { content: '→'; text-decoration: none; display: inline-block; }
+        .project-link::after { content: '→'; display: inline-block; text-decoration: none; }
 
-        /* ── CONTACT ───────────────────────────────────────── */
+
+        /* ══════════════════════════════════════════════════════
+           SECTION 4: CONTACT
+           ══════════════════════════════════════════════════════ */
         #contact { background: var(--bg-card); text-align: center; }
+        /*
+         * FIX: .section-title has text-align:left as its default rule.
+         * Since the entire contact section is centered, we must explicitly
+         * override the title to match — otherwise it renders left while
+         * the label above it and the intro text below it are both centered.
+         */
+        #contact .section-title { text-align: center; }
+
         .contact-intro {
-            max-width: 44ch;            /* measured line length for centered text */
+            max-width: 44ch;       /* shorter measure keeps centered text readable */
             margin: 0 auto 2.75rem;
             color: var(--muted); font-size: 1.05rem; line-height: 1.9;
         }
         .contact-links { display: flex; justify-content: center; gap: 1.25rem; flex-wrap: wrap; }
 
-        /* ── FOOTER ────────────────────────────────────────── */
+
+        /* ══════════════════════════════════════════════════════
+           FOOTER
+           ══════════════════════════════════════════════════════ */
         footer {
             padding: 2rem 1rem; text-align: center;
             font-size: .82rem; line-height: 1.7;
             color: var(--muted); border-top: 1px solid var(--border);
         }
 
-        /* ── RESPONSIVE ────────────────────────────────────── */
+
+        /* ══════════════════════════════════════════════════════
+           RESPONSIVE  (≤ 768px)
+           ══════════════════════════════════════════════════════ */
         @media (max-width: 768px) {
+
+            /* ── Navigation ────────────────────────────── */
+
+            /* Show hamburger; hide the horizontal nav links */
+            .nav-toggle { display: flex; }
             .nav-links  { display: none; }
+
+            /*
+             * FIX: Mobile navigation drawer.
+             * When JS adds .nav-open to <nav>, the links drop down
+             * below the nav bar as a full-width vertical menu.
+             */
+            nav.nav-open .nav-links {
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+                position: absolute;
+                top: 64px; left: 0; right: 0;
+                background: rgba(248, 247, 244, .97);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border-bottom: 1px solid var(--border);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, .06);
+                padding: .5rem 2.5rem 1rem;
+            }
+            nav.nav-open .nav-links li {
+                border-bottom: 1px solid var(--border);
+            }
+            nav.nav-open .nav-links li:last-child { border-bottom: none; }
+            nav.nav-open .nav-links a {
+                display: block;
+                padding: .8rem 0;
+                font-size: .875rem;
+            }
+
+            /* Animate hamburger bars → X when menu is open.
+               Gap = 5px, bar height = 2px → center-to-center = 7px → translateY(±7px) */
+            nav.nav-open .nav-toggle span:nth-child(1) { transform: translateY(7px)  rotate( 45deg); }
+            nav.nav-open .nav-toggle span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+            nav.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+            /* ── Hero ──────────────────────────────────── */
             .hero-inner { flex-direction: column-reverse; gap: 2.5rem; text-align: center; }
-            .hero-tagline, .about-bio-text p { max-width: 100%; text-align: left; }
-            .hero-cta   { justify-content: center; }
-            .photo-frame { width: 190px; height: 190px; }
-            .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+            /*
+             * FIX: hero-tagline now correctly inherits text-align:center from
+             * hero-inner. Previously it was overridden to left while every
+             * surrounding element (greeting, name, buttons) was centered.
+             * about-bio-text paragraphs are kept left in a separate rule below.
+             */
+            .hero-tagline { max-width: 100%; }
+            .hero-cta     { justify-content: center; }
+            .photo-frame  { width: 190px; height: 190px; }
+
+            /* ── About ─────────────────────────────────── */
+            .about-grid       { grid-template-columns: 1fr; gap: 3rem; }
+            /* Bio paragraphs stay left-aligned for readability in single column */
+            .about-bio-text p { max-width: 100%; text-align: left; }
+
+            /* ── Projects ──────────────────────────────── */
             .projects-grid { grid-template-columns: 1fr; }
-            section { padding: 80px 0; }
+
+            /* ── General ───────────────────────────────── */
+            section        { padding: 80px 0; }
             .contact-intro { max-width: 100%; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Skip link — lets keyboard users jump straight to content -->
+    <!-- Skip link: lets keyboard users jump past the nav bar straight to content -->
     <a href="#main-content" class="skip-nav">Skip to main content</a>
 
-    <!-- NAV -->
+
+    <!-- ══════════════════════════════════════════════════════
+         NAVIGATION BAR
+         ══════════════════════════════════════════════════════ -->
     <nav aria-label="Main navigation">
-        <a href="#hero" class="nav-brand">Your Name</a> <!-- TODO: your name -->
-        <ul class="nav-links" role="list">
+
+        <!-- TODO: Replace "Your Name" with your actual name -->
+        <a href="#hero" class="nav-brand">Your Name</a>
+
+        <!--
+            Hamburger button — only visible on mobile screens.
+            aria-expanded and aria-label are updated by the JS at the bottom.
+        -->
+        <button class="nav-toggle"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="nav-menu">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </button>
+
+        <!-- id="nav-menu" ties this list to the hamburger button's aria-controls -->
+        <ul class="nav-links" id="nav-menu" role="list">
             <li><a href="#about">About</a></li>
             <li><a href="#projects">Projects</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
+
     </nav>
+
 
     <main id="main-content">
 
-        <!-- HERO -->
+        <!-- ══════════════════════════════════════════════════════
+             SECTION 1: HERO
+             ══════════════════════════════════════════════════════ -->
         <section id="hero" aria-labelledby="hero-heading">
             <div class="container">
                 <div class="hero-inner">
 
                     <div class="hero-text">
                         <span class="hero-greeting" aria-hidden="true">👋 Hello, I'm</span>
+
+                        <!-- TODO: Replace with your name. Remove <br> if your name is short. -->
                         <h1 class="hero-name" id="hero-heading">
-                            Your<br>Full Name <!-- TODO: your name; remove <br> if short -->
+                            Your<br>Full Name
                         </h1>
+
+                        <!-- TODO: Update this tagline.
+                             Example: "3rd Year CS Student · Aspiring Software Engineer" -->
                         <p class="hero-tagline">
-                            2nd Year IT Student &nbsp;•&nbsp; Aspiring Developer
-                            &nbsp;•&nbsp; Based in the Philippines
-                            <!-- TODO: update tagline -->
+                            2nd Year IT Student &nbsp;·&nbsp; Aspiring Developer
+                            &nbsp;·&nbsp; Based in the Philippines
                         </p>
+
                         <div class="hero-cta">
                             <a href="#projects" class="btn btn-primary">View My Work</a>
                             <a href="#contact"  class="btn btn-outline">Get In Touch</a>
@@ -338,36 +497,54 @@
                     <div class="photo-frame" role="img" aria-label="Profile photo placeholder">
                         <!--
                             TODO: Add your photo:
-                            1. Save it as photo.jpg in the same folder as this file.
-                            2. Delete the SVG below.
-                            3. Uncomment the <img> line and update the alt text.
+                            1. Save your photo as photo.jpg in the same folder as this file.
+                            2. Delete the <svg> block below.
+                            3. Uncomment the <img> tag and update the alt text.
                         -->
-                        <!-- <img src="photo.jpg" alt="Profile photo of Your Name"> -->
-                        <!-- <svg class="placeholder-icon" viewBox="0 0 80 80" fill="none"
+                        <!-- <img src="photo.jpg" alt="Profile photo of Your Name" loading="lazy"> -->
+                        
+                        <img src="personal-picture.jpg" 
+                            alt="Profile photo of Your Name" 
+                            loading="lazy"
+                            onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg class=%22placeholder-icon%22 viewBox=%220 0 80 80%22 fill=%22none%22 xmlns=%22http://www.w3.org/2000/svg%22 aria-hidden=%22true%22%3E%3Ccircle cx=%2240%22 cy=%2229%22 r=%2217%22 stroke=%22%23666%22 stroke-width=%223%22/%3E%3Cpath d=%22M8 73c0-17.673 14.327-32 32-32s32 14.327 32 32%22 stroke=%22%23666%22 stroke-width=%223%22 stroke-linecap=%22round%22/%3E%3C/svg%3E';">
+                        
+                        <!--
+                        <svg class="placeholder-icon" viewBox="0 0 80 80" fill="none"
                              xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                             <circle cx="40" cy="29" r="17" stroke="#666" stroke-width="3"/>
                             <path d="M8 73c0-17.673 14.327-32 32-32s32 14.327 32 32"
                                   stroke="#666" stroke-width="3" stroke-linecap="round"/>
-                        </svg> -->
-                        <img src="personal-picture.jpg" alt="Profile photo of Your Name">
+                        </svg>                       
+                        -->
+
                     </div>
 
                 </div>
             </div>
         </section>
 
-        <hr class="divider">
+        <!-- aria-hidden: purely decorative rule; screen readers skip it -->
+        <hr class="divider" aria-hidden="true">
 
-        <!-- ABOUT -->
+
+        <!-- ══════════════════════════════════════════════════════
+             SECTION 2: ABOUT
+             ══════════════════════════════════════════════════════ -->
         <section id="about" aria-labelledby="about-heading">
             <div class="container">
                 <div class="about-grid">
 
+                    <!-- Left column: bio -->
                     <div class="about-bio">
                         <span class="section-label" aria-hidden="true">About Me</span>
                         <h2 class="section-title" id="about-heading">A Little<br>About Myself</h2>
                         <div class="about-bio-text">
-                            <!-- TODO: Replace with your own bio (3–5 sentences) -->
+                            <!--
+                                TODO: Replace with your own bio (3–5 sentences).
+                                Suggested structure:
+                                  Para 1 — year, course, and school; what you enjoy.
+                                  Para 2 — interests outside class; your goal or aspiration.
+                            -->
                             <p>
                                 I'm a 2nd-year Information Technology student with a growing
                                 passion for building things on the web. I enjoy turning ideas into
@@ -383,10 +560,15 @@
                         </div>
                     </div>
 
+                    <!-- Right column: skills -->
                     <div class="about-skills">
                         <span class="section-label" aria-hidden="true">Skills &amp; Tools</span>
                         <h2 class="section-title">What I<br>Work With</h2>
-                        <!-- TODO: Add/remove skill tags to match your actual skills -->
+                        <!--
+                            TODO: Update these tags to match your actual skills.
+                            To ADD a skill:    copy any <span class="skill-tag"> line and change the text.
+                            To REMOVE a skill: delete the entire <span> line.
+                        -->
                         <div class="skills-grid" role="list" aria-label="Skills and tools">
                             <span class="skill-tag" role="listitem">HTML5</span>
                             <span class="skill-tag" role="listitem">CSS3</span>
@@ -403,9 +585,12 @@
             </div>
         </section>
 
-        <hr class="divider">
+        <hr class="divider" aria-hidden="true">
 
-        <!-- PROJECTS -->
+
+        <!-- ══════════════════════════════════════════════════════
+             SECTION 3: PROJECTS
+             ══════════════════════════════════════════════════════ -->
         <section id="projects" aria-labelledby="projects-heading">
             <div class="container">
                 <span class="section-label" aria-hidden="true">My Work</span>
@@ -413,24 +598,32 @@
 
                 <div class="projects-grid">
 
-                    <!-- PROJECT 1 -->
+                    <!-- ── PROJECT CARD 1 ──────────────────────── -->
+                    <!-- TODO: Fill in your first project. -->
                     <article class="project-card" aria-label="Project: Project Title One">
+
                         <div class="project-thumbnail">
-                            <!-- TODO: save screenshot as project1.png, delete the span, uncomment img -->
-                            <!-- <img src="project1.png" alt="Screenshot of Project Title One"> -->
+                            <!--
+                                TODO: Add a screenshot:
+                                1. Save it as project1.png in the same folder as this file.
+                                2. Delete the <span> line below.
+                                3. Uncomment the <img> tag.
+                            -->
+                            <!-- <img src="project1.png" alt="Screenshot of Project Title One" loading="lazy"> -->
                             <span class="thumbnail-placeholder" aria-hidden="true">Screenshot</span>
                         </div>
+
                         <div class="project-body">
-                            <h3 class="project-title">Project Title One</h3> <!-- TODO -->
+                            <h3 class="project-title">Project Title One</h3><!-- TODO: project name -->
                             <p class="project-desc">
                                 A short description of what this project does, the problem
                                 it solves, and something interesting you learned while building it.
-                            </p> <!-- TODO -->
+                            </p><!-- TODO: 1–2 sentence description -->
                             <div class="project-tech" aria-label="Technologies used">
                                 <span class="tech-badge">HTML</span>
                                 <span class="tech-badge">CSS</span>
                                 <span class="tech-badge">JavaScript</span>
-                                <!-- TODO: update badges -->
+                                <!-- TODO: update or add more tech badges -->
                             </div>
                             <!-- TODO: replace # with your GitHub repo or live site URL -->
                             <a href="#" class="project-link" target="_blank"
@@ -439,20 +632,26 @@
                                 View Project
                             </a>
                         </div>
-                    </article>
 
-                    <!-- PROJECT 2 -->
+                    </article>
+                    <!-- ── END PROJECT CARD 1 ──────────────────── -->
+
+
+                    <!-- ── PROJECT CARD 2 ──────────────────────── -->
+                    <!-- TODO: Fill in your second project. -->
                     <article class="project-card" aria-label="Project: Project Title Two">
+
                         <div class="project-thumbnail">
-                            <!-- <img src="project2.png" alt="Screenshot of Project Title Two"> -->
+                            <!-- <img src="project2.png" alt="Screenshot of Project Title Two" loading="lazy"> -->
                             <span class="thumbnail-placeholder" aria-hidden="true">Screenshot</span>
                         </div>
+
                         <div class="project-body">
-                            <h3 class="project-title">Project Title Two</h3> <!-- TODO -->
+                            <h3 class="project-title">Project Title Two</h3><!-- TODO -->
                             <p class="project-desc">
                                 A short description of what this project does, the problem
                                 it solves, and something interesting you learned while building it.
-                            </p> <!-- TODO -->
+                            </p><!-- TODO -->
                             <div class="project-tech" aria-label="Technologies used">
                                 <span class="tech-badge">Python</span>
                                 <span class="tech-badge">Git</span>
@@ -464,20 +663,26 @@
                                 View Project
                             </a>
                         </div>
-                    </article>
 
-                    <!-- PROJECT 3 -->
+                    </article>
+                    <!-- ── END PROJECT CARD 2 ──────────────────── -->
+
+
+                    <!-- ── PROJECT CARD 3 ──────────────────────── -->
+                    <!-- TODO: Fill in your third project. -->
                     <article class="project-card" aria-label="Project: Project Title Three">
+
                         <div class="project-thumbnail">
-                            <!-- <img src="project3.png" alt="Screenshot of Project Title Three"> -->
+                            <!-- <img src="project3.png" alt="Screenshot of Project Title Three" loading="lazy"> -->
                             <span class="thumbnail-placeholder" aria-hidden="true">Screenshot</span>
                         </div>
+
                         <div class="project-body">
-                            <h3 class="project-title">Project Title Three</h3> <!-- TODO -->
+                            <h3 class="project-title">Project Title Three</h3><!-- TODO -->
                             <p class="project-desc">
                                 A short description of what this project does, the problem
                                 it solves, and something interesting you learned while building it.
-                            </p> <!-- TODO -->
+                            </p><!-- TODO -->
                             <div class="project-tech" aria-label="Technologies used">
                                 <span class="tech-badge">Java</span>
                                 <span class="tech-badge">Figma</span>
@@ -489,33 +694,47 @@
                                 View Project
                             </a>
                         </div>
-                    </article>
 
-                    <!-- TODO: Copy an <article class="project-card"> block above to add more projects -->
+                    </article>
+                    <!-- ── END PROJECT CARD 3 ──────────────────── -->
+
+
+                    <!--
+                        TODO: To add more projects, copy the entire
+                        <article class="project-card"> … </article>
+                        block above and paste it here. Then update all the content inside.
+                    -->
 
                 </div>
             </div>
         </section>
 
-        <hr class="divider">
+        <hr class="divider" aria-hidden="true">
 
-        <!-- CONTACT -->
+
+        <!-- ══════════════════════════════════════════════════════
+             SECTION 4: CONTACT
+             ══════════════════════════════════════════════════════ -->
         <section id="contact" aria-labelledby="contact-heading">
             <div class="container">
                 <span class="section-label" aria-hidden="true">Get In Touch</span>
                 <h2 class="section-title" id="contact-heading">Let's Connect</h2>
+
+                <!-- TODO: Personalize this message if you like. Keep it friendly. -->
                 <p class="contact-intro">
                     I'm open to internship opportunities, project collaborations, or just
                     a friendly chat about technology. Feel free to reach out — I'll do my
                     best to get back to you promptly!
-                </p> <!-- TODO: personalize if you like -->
+                </p>
+
                 <div class="contact-links">
-                    <!-- TODO: replace both instances of youremail@example.com -->
+                    <!-- TODO: Replace both instances of youremail@example.com with your actual address -->
                     <a href="mailto:youremail@example.com" class="btn btn-primary"
                        aria-label="Send email to youremail@example.com">
                         ✉&nbsp; youremail@example.com
                     </a>
-                    <!-- TODO: replace yourusername with your GitHub username -->
+
+                    <!-- TODO: Replace yourusername with your actual GitHub username -->
                     <a href="https://github.com/yourusername" class="btn btn-outline"
                        target="_blank" rel="noopener noreferrer"
                        aria-label="Visit GitHub profile (opens in new tab)">
@@ -527,11 +746,58 @@
 
     </main>
 
+
     <!-- FOOTER -->
     <footer>
-        <!-- TODO: replace Your Name -->
-        <p>© 2025 Your Name &nbsp;•&nbsp; Built with HTML &amp; CSS &nbsp;•&nbsp; Deployed on Netlify</p>
+        <!-- TODO: Replace "Your Name" with your actual name.
+             Also update the year when you deploy a new version. -->
+        <p>© 2025 Your Name &nbsp;·&nbsp; Built with HTML &amp; CSS &nbsp;·&nbsp; Deployed on Netlify</p>
     </footer>
+
+
+    <script>
+        /* ══════════════════════════════════════════════════════
+           MOBILE NAVIGATION TOGGLE
+           ══════════════════════════════════════════════════════
+           This script powers the hamburger menu on small screens.
+           It adds/removes the class "nav-open" on the <nav> element.
+           The CSS uses that class to:
+             • Show / hide the dropdown link list
+             • Animate the three bars into an X icon
+
+           No external libraries needed — this is plain JavaScript.
+           ══════════════════════════════════════════════════════ */
+        (function () {
+            var toggle = document.querySelector('.nav-toggle');
+            var nav    = document.querySelector('nav');
+
+            /* Open or close the menu when the hamburger button is clicked */
+            toggle.addEventListener('click', function () {
+                var isOpen = nav.classList.toggle('nav-open');
+                toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                toggle.setAttribute('aria-label',
+                    isOpen ? 'Close navigation menu' : 'Open navigation menu');
+            });
+
+            /* Close the menu automatically when any nav link is tapped */
+            document.querySelectorAll('.nav-links a').forEach(function (link) {
+                link.addEventListener('click', function () {
+                    nav.classList.remove('nav-open');
+                    toggle.setAttribute('aria-expanded', 'false');
+                    toggle.setAttribute('aria-label', 'Open navigation menu');
+                });
+            });
+
+            /* Close the menu when the user taps anywhere outside of the nav bar */
+            document.addEventListener('click', function (event) {
+                if (nav.classList.contains('nav-open') && !nav.contains(event.target)) {
+                    nav.classList.remove('nav-open');
+                    toggle.setAttribute('aria-expanded', 'false');
+                    toggle.setAttribute('aria-label', 'Open navigation menu');
+                }
+            });
+        }());
+    </script>
 
 </body>
 </html>
