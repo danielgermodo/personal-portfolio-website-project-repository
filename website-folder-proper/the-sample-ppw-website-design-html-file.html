@@ -1,0 +1,537 @@
+<!DOCTYPE html<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- TODO: Change to your full name -->
+    <title>Your Name — Portfolio</title>
+
+    <style>
+        /* ── DESIGN TOKENS ─────────────────────────────────── */
+        :root {
+            /* Colors — all contrast-checked against their backgrounds */
+            --bg:        #F8F7F4;   /* warm off-white page background          */
+            --bg-card:   #FFFFFF;   /* section / card background               */
+            --text:      #1C1C1C;   /* primary text — near-black, not harsh    */
+            --muted:     #505050;   /* secondary text — 7:1 on white (AAA)     */
+            --accent:    #1B3A5C;   /* navy — headings, buttons                */
+            --gold:      #96681F;   /* amber — labels, links — AA on white     */
+            --border:    #E4E2DC;   /* dividers and card borders               */
+            --focus:     #2E7AD0;   /* bright blue keyboard focus ring         */
+            --radius:    8px;
+            --max-width: 960px;
+
+            /*
+             * OFFLINE-SAFE FONT STACKS — sleek, elegant, dyslexia-friendly
+             *
+             * Display (headings): Palatino → Georgia → serif
+             *   Palatino's open proportions and slight calligraphic quality
+             *   give headings warmth and distinction without being ornate.
+             *
+             * Body (text / nav): Optima → Segoe UI → Candara → sans-serif
+             *   Optima is a humanist sans with subtly flared terminals —
+             *   it reads with exceptional clarity. Its open counters and
+             *   unambiguous letterforms (clear l/I distinction) make it
+             *   one of the most dyslexia-friendly offline fonts available.
+             *   Segoe UI and Candara are its closest Windows/Linux equivalents.
+             */
+            --font-display: Palatino, 'Palatino Linotype', Georgia, 'Times New Roman', serif;
+            --font-body:    Optima, 'Segoe UI', Candara, 'Trebuchet MS', sans-serif;
+        }
+
+        /* ── RESET ─────────────────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html  { scroll-behavior: smooth; }
+        body  {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 17px;         /* 17px base — above the 16px accessibility floor */
+            line-height: 1.9;        /* generous leading eases tracking for dyslexia   */
+            word-spacing: 0.04em;    /* slight word spacing reduces crowding           */
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+        img { display: block; max-width: 100%; }
+        a   { color: inherit; }
+
+        /* ── SKIP NAVIGATION (screen-reader / keyboard users) ─ */
+        .skip-nav {
+            position: absolute; top: -100%; left: 1rem;
+            background: var(--accent); color: #fff;
+            padding: .6rem 1.2rem; border-radius: var(--radius);
+            font-size: .875rem; font-weight: 500; text-decoration: none;
+            z-index: 200; transition: top .15s;
+        }
+        .skip-nav:focus { top: 1rem; }
+
+        /* ── GLOBAL FOCUS RING ─────────────────────────────── */
+        /* Visible, high-contrast focus outline for keyboard navigation */
+        :focus-visible {
+            outline: 3px solid var(--focus);
+            outline-offset: 3px;
+            border-radius: 3px;
+        }
+
+        /* ── REDUCED MOTION ────────────────────────────────── */
+        /* Disable all transitions and animations for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                transition: none !important;
+                animation: none !important;
+            }
+            html { scroll-behavior: auto; }
+        }
+
+        /* ── NAV ───────────────────────────────────────────── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            height: 64px; display: flex; align-items: center;
+            justify-content: space-between; padding: 0 2.5rem;
+            background: rgba(248, 247, 244, .92);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-brand {
+            font-family: var(--font-display); font-size: 1.2rem; font-weight: 600;
+            color: var(--accent); text-decoration: none; letter-spacing: .01em;
+        }
+        .nav-links { list-style: none; display: flex; gap: 2.25rem; }
+        .nav-links a {
+            text-decoration: none; color: var(--muted);
+            font-size: .8rem; font-weight: 500;
+            letter-spacing: .12em; text-transform: uppercase;
+            transition: color .2s;
+        }
+        /* Underline on hover — more legible cue than color alone */
+        .nav-links a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 4px; }
+
+        /* ── LAYOUT HELPERS ────────────────────────────────── */
+        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 2rem; }
+        section    { padding: 108px 0; }
+        hr.divider { border: none; border-top: 1px solid var(--border); }
+
+        /* Decorative uppercase label — wide tracking keeps each letter distinct */
+        .section-label {
+            display: block; font-size: .72rem; font-weight: 500;
+            letter-spacing: .18em; text-transform: uppercase;
+            color: var(--gold); margin-bottom: .8rem;
+        }
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.9rem, 4vw, 2.65rem);
+            font-weight: 600; line-height: 1.2;
+            color: var(--accent); margin-bottom: 3rem;
+            /* Left-align — never justify headings */
+            text-align: left;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block; padding: .8rem 1.85rem; border-radius: var(--radius);
+            font-family: var(--font-body); font-size: .9rem; font-weight: 500;
+            text-decoration: none; cursor: pointer; transition: all .22s ease;
+            letter-spacing: .02em;
+        }
+        .btn-primary {
+            background: var(--accent); color: #fff; border: 1.5px solid var(--accent);
+        }
+        .btn-primary:hover {
+            background: #14304F; border-color: #14304F;
+            transform: translateY(-2px); box-shadow: 0 6px 20px rgba(27,58,92,.2);
+        }
+        .btn-outline {
+            background: transparent; color: var(--accent); border: 1.5px solid var(--accent);
+        }
+        .btn-outline:hover {
+            background: var(--accent); color: #fff;
+            transform: translateY(-2px); box-shadow: 0 6px 20px rgba(27,58,92,.2);
+        }
+
+        /* ── HERO ──────────────────────────────────────────── */
+        #hero { min-height: 100vh; display: flex; align-items: center; padding-top: 64px; }
+        .hero-inner { display: flex; align-items: center; gap: 5rem; }
+        .hero-text   { flex: 1; }
+
+        .hero-greeting {
+            display: block; font-size: .85rem; font-weight: 400;
+            letter-spacing: .1em; text-transform: uppercase;
+            color: var(--gold); margin-bottom: 1.1rem;
+        }
+        .hero-name {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-weight: 600; line-height: 1.06;
+            color: var(--accent); letter-spacing: -.01em;
+            margin-bottom: 1.35rem;
+        }
+        /* Tagline: left-aligned, measured line length, comfortable weight */
+        .hero-tagline {
+            font-size: 1.1rem; font-weight: 400;
+            color: var(--muted); line-height: 1.85;
+            max-width: 440px; margin-bottom: 2.5rem;
+        }
+        .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+        /* Profile photo frame */
+        .photo-frame {
+            width: 268px; height: 268px; border-radius: 50%;
+            background: var(--border); border: 4px solid var(--bg-card);
+            box-shadow: 0 0 0 3px var(--accent);
+            overflow: hidden; display: flex; align-items: center;
+            justify-content: center; flex-shrink: 0;
+        }
+        .photo-frame .placeholder-icon { width: 90px; height: 90px; opacity: .22; }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* ── ABOUT ─────────────────────────────────────────── */
+        #about { background: var(--bg-card); }
+
+        .about-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 5rem; align-items: start;
+        }
+        /* Body paragraphs: measured line length and generous spacing */
+        .about-bio-text p {
+            color: var(--muted);
+            font-size: 1rem;
+            line-height: 1.95;       /* extra leading for paragraph readability */
+            margin-bottom: 1.15rem;
+            max-width: 52ch;         /* ~65 characters — optimal reading measure */
+            text-align: left;        /* always left-aligned, never justified     */
+        }
+        .about-bio-text p:last-child { margin-bottom: 0; }
+
+        /* Skill pills */
+        .skills-grid { display: flex; flex-wrap: wrap; gap: .65rem; }
+        .skill-tag {
+            display: inline-block; background: var(--bg);
+            border: 1px solid var(--border); color: var(--text);
+            font-size: .82rem; font-weight: 500; letter-spacing: .025em;
+            padding: .4rem 1.05rem; border-radius: 100px;
+            cursor: default; transition: background .2s, color .2s, border-color .2s;
+        }
+        .skill-tag:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+        /* ── PROJECTS ──────────────────────────────────────── */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(278px, 1fr));
+            gap: 1.5rem;
+        }
+        .project-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: calc(var(--radius) * 1.5); overflow: hidden;
+            display: flex; flex-direction: column;
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+        .project-card:hover { transform: translateY(-5px); box-shadow: 0 14px 40px rgba(0,0,0,.07); }
+
+        .project-thumbnail {
+            width: 100%; height: 185px;
+            background: linear-gradient(135deg, #D5E5F3 0%, #EBE1D6 100%);
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; flex-shrink: 0;
+        }
+        .project-thumbnail img  { width: 100%; height: 100%; object-fit: cover; }
+        .thumbnail-placeholder  {
+            font-size: .72rem; color: #ABABAB;
+            letter-spacing: .1em; text-transform: uppercase;
+        }
+
+        .project-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
+
+        .project-title {
+            font-family: var(--font-display); font-size: 1.25rem; font-weight: 600;
+            color: var(--text); margin-bottom: .5rem; line-height: 1.3;
+        }
+        /* Project descriptions: left-aligned, comfortable size */
+        .project-desc {
+            font-size: .92rem; line-height: 1.8;
+            color: var(--muted); flex: 1; margin-bottom: 1rem;
+            text-align: left;
+        }
+        .project-tech { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1.25rem; }
+        .tech-badge {
+            background: var(--bg); color: var(--accent); border: 1px solid var(--border);
+            font-size: .73rem; font-weight: 500; padding: .2rem .65rem;
+            border-radius: 4px; letter-spacing: .03em;
+        }
+        /* Project link — arrow slides on hover; underline makes it clear it's a link */
+        .project-link {
+            display: inline-flex; align-items: center; gap: .45rem;
+            text-decoration: underline; text-underline-offset: 3px;
+            color: var(--gold); font-size: .875rem; font-weight: 500;
+            transition: gap .2s; margin-top: auto;
+        }
+        .project-link:hover { gap: .8rem; }
+        .project-link::after { content: '→'; text-decoration: none; display: inline-block; }
+
+        /* ── CONTACT ───────────────────────────────────────── */
+        #contact { background: var(--bg-card); text-align: center; }
+        .contact-intro {
+            max-width: 44ch;            /* measured line length for centered text */
+            margin: 0 auto 2.75rem;
+            color: var(--muted); font-size: 1.05rem; line-height: 1.9;
+        }
+        .contact-links { display: flex; justify-content: center; gap: 1.25rem; flex-wrap: wrap; }
+
+        /* ── FOOTER ────────────────────────────────────────── */
+        footer {
+            padding: 2rem 1rem; text-align: center;
+            font-size: .82rem; line-height: 1.7;
+            color: var(--muted); border-top: 1px solid var(--border);
+        }
+
+        /* ── RESPONSIVE ────────────────────────────────────── */
+        @media (max-width: 768px) {
+            .nav-links  { display: none; }
+            .hero-inner { flex-direction: column-reverse; gap: 2.5rem; text-align: center; }
+            .hero-tagline, .about-bio-text p { max-width: 100%; text-align: left; }
+            .hero-cta   { justify-content: center; }
+            .photo-frame { width: 190px; height: 190px; }
+            .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+            .projects-grid { grid-template-columns: 1fr; }
+            section { padding: 80px 0; }
+            .contact-intro { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Skip link — lets keyboard users jump straight to content -->
+    <a href="#main-content" class="skip-nav">Skip to main content</a>
+
+    <!-- NAV -->
+    <nav aria-label="Main navigation">
+        <a href="#hero" class="nav-brand">Your Name</a> <!-- TODO: your name -->
+        <ul class="nav-links" role="list">
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main id="main-content">
+
+        <!-- HERO -->
+        <section id="hero" aria-labelledby="hero-heading">
+            <div class="container">
+                <div class="hero-inner">
+
+                    <div class="hero-text">
+                        <span class="hero-greeting" aria-hidden="true">👋 Hello, I'm</span>
+                        <h1 class="hero-name" id="hero-heading">
+                            Your<br>Full Name <!-- TODO: your name; remove <br> if short -->
+                        </h1>
+                        <p class="hero-tagline">
+                            2nd Year IT Student &nbsp;•&nbsp; Aspiring Developer
+                            &nbsp;•&nbsp; Based in the Philippines
+                            <!-- TODO: update tagline -->
+                        </p>
+                        <div class="hero-cta">
+                            <a href="#projects" class="btn btn-primary">View My Work</a>
+                            <a href="#contact"  class="btn btn-outline">Get In Touch</a>
+                        </div>
+                    </div>
+
+                    <div class="photo-frame" role="img" aria-label="Profile photo placeholder">
+                        <!--
+                            TODO: Add your photo:
+                            1. Save it as photo.jpg in the same folder as this file.
+                            2. Delete the SVG below.
+                            3. Uncomment the <img> line and update the alt text.
+                        -->
+                        <!-- <img src="photo.jpg" alt="Profile photo of Your Name"> -->
+                        <!-- <svg class="placeholder-icon" viewBox="0 0 80 80" fill="none"
+                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <circle cx="40" cy="29" r="17" stroke="#666" stroke-width="3"/>
+                            <path d="M8 73c0-17.673 14.327-32 32-32s32 14.327 32 32"
+                                  stroke="#666" stroke-width="3" stroke-linecap="round"/>
+                        </svg> -->
+                        <img src="personal-picture.jpg" alt="Profile photo of Your Name">
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <!-- ABOUT -->
+        <section id="about" aria-labelledby="about-heading">
+            <div class="container">
+                <div class="about-grid">
+
+                    <div class="about-bio">
+                        <span class="section-label" aria-hidden="true">About Me</span>
+                        <h2 class="section-title" id="about-heading">A Little<br>About Myself</h2>
+                        <div class="about-bio-text">
+                            <!-- TODO: Replace with your own bio (3–5 sentences) -->
+                            <p>
+                                I'm a 2nd-year Information Technology student with a growing
+                                passion for building things on the web. I enjoy turning ideas into
+                                clean, functional interfaces and exploring how technology can be
+                                used to solve everyday problems.
+                            </p>
+                            <p>
+                                Outside of coursework, I love sketching UI concepts in Figma,
+                                learning new frameworks, and contributing to small personal
+                                projects. My long-term goal is to become a full-stack developer
+                                and build products that genuinely help people.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="about-skills">
+                        <span class="section-label" aria-hidden="true">Skills &amp; Tools</span>
+                        <h2 class="section-title">What I<br>Work With</h2>
+                        <!-- TODO: Add/remove skill tags to match your actual skills -->
+                        <div class="skills-grid" role="list" aria-label="Skills and tools">
+                            <span class="skill-tag" role="listitem">HTML5</span>
+                            <span class="skill-tag" role="listitem">CSS3</span>
+                            <span class="skill-tag" role="listitem">JavaScript</span>
+                            <span class="skill-tag" role="listitem">Python</span>
+                            <span class="skill-tag" role="listitem">Java</span>
+                            <span class="skill-tag" role="listitem">Git &amp; GitHub</span>
+                            <span class="skill-tag" role="listitem">Figma</span>
+                            <span class="skill-tag" role="listitem">Canva</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <!-- PROJECTS -->
+        <section id="projects" aria-labelledby="projects-heading">
+            <div class="container">
+                <span class="section-label" aria-hidden="true">My Work</span>
+                <h2 class="section-title" id="projects-heading">Featured Projects</h2>
+
+                <div class="projects-grid">
+
+                    <!-- PROJECT 1 -->
+                    <article class="project-card" aria-label="Project: Project Title One">
+                        <div class="project-thumbnail">
+                            <!-- TODO: save screenshot as project1.png, delete the span, uncomment img -->
+                            <!-- <img src="project1.png" alt="Screenshot of Project Title One"> -->
+                            <span class="thumbnail-placeholder" aria-hidden="true">Screenshot</span>
+                        </div>
+                        <div class="project-body">
+                            <h3 class="project-title">Project Title One</h3> <!-- TODO -->
+                            <p class="project-desc">
+                                A short description of what this project does, the problem
+                                it solves, and something interesting you learned while building it.
+                            </p> <!-- TODO -->
+                            <div class="project-tech" aria-label="Technologies used">
+                                <span class="tech-badge">HTML</span>
+                                <span class="tech-badge">CSS</span>
+                                <span class="tech-badge">JavaScript</span>
+                                <!-- TODO: update badges -->
+                            </div>
+                            <!-- TODO: replace # with your GitHub repo or live site URL -->
+                            <a href="#" class="project-link" target="_blank"
+                               rel="noopener noreferrer"
+                               aria-label="View Project Title One (opens in new tab)">
+                                View Project
+                            </a>
+                        </div>
+                    </article>
+
+                    <!-- PROJECT 2 -->
+                    <article class="project-card" aria-label="Project: Project Title Two">
+                        <div class="project-thumbnail">
+                            <!-- <img src="project2.png" alt="Screenshot of Project Title Two"> -->
+                            <span class="thumbnail-placeholder" aria-hidden="true">Screenshot</span>
+                        </div>
+                        <div class="project-body">
+                            <h3 class="project-title">Project Title Two</h3> <!-- TODO -->
+                            <p class="project-desc">
+                                A short description of what this project does, the problem
+                                it solves, and something interesting you learned while building it.
+                            </p> <!-- TODO -->
+                            <div class="project-tech" aria-label="Technologies used">
+                                <span class="tech-badge">Python</span>
+                                <span class="tech-badge">Git</span>
+                                <!-- TODO: update badges -->
+                            </div>
+                            <a href="#" class="project-link" target="_blank"
+                               rel="noopener noreferrer"
+                               aria-label="View Project Title Two (opens in new tab)">
+                                View Project
+                            </a>
+                        </div>
+                    </article>
+
+                    <!-- PROJECT 3 -->
+                    <article class="project-card" aria-label="Project: Project Title Three">
+                        <div class="project-thumbnail">
+                            <!-- <img src="project3.png" alt="Screenshot of Project Title Three"> -->
+                            <span class="thumbnail-placeholder" aria-hidden="true">Screenshot</span>
+                        </div>
+                        <div class="project-body">
+                            <h3 class="project-title">Project Title Three</h3> <!-- TODO -->
+                            <p class="project-desc">
+                                A short description of what this project does, the problem
+                                it solves, and something interesting you learned while building it.
+                            </p> <!-- TODO -->
+                            <div class="project-tech" aria-label="Technologies used">
+                                <span class="tech-badge">Java</span>
+                                <span class="tech-badge">Figma</span>
+                                <!-- TODO: update badges -->
+                            </div>
+                            <a href="#" class="project-link" target="_blank"
+                               rel="noopener noreferrer"
+                               aria-label="View Project Title Three (opens in new tab)">
+                                View Project
+                            </a>
+                        </div>
+                    </article>
+
+                    <!-- TODO: Copy an <article class="project-card"> block above to add more projects -->
+
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <!-- CONTACT -->
+        <section id="contact" aria-labelledby="contact-heading">
+            <div class="container">
+                <span class="section-label" aria-hidden="true">Get In Touch</span>
+                <h2 class="section-title" id="contact-heading">Let's Connect</h2>
+                <p class="contact-intro">
+                    I'm open to internship opportunities, project collaborations, or just
+                    a friendly chat about technology. Feel free to reach out — I'll do my
+                    best to get back to you promptly!
+                </p> <!-- TODO: personalize if you like -->
+                <div class="contact-links">
+                    <!-- TODO: replace both instances of youremail@example.com -->
+                    <a href="mailto:youremail@example.com" class="btn btn-primary"
+                       aria-label="Send email to youremail@example.com">
+                        ✉&nbsp; youremail@example.com
+                    </a>
+                    <!-- TODO: replace yourusername with your GitHub username -->
+                    <a href="https://github.com/yourusername" class="btn btn-outline"
+                       target="_blank" rel="noopener noreferrer"
+                       aria-label="Visit GitHub profile (opens in new tab)">
+                        ⌥&nbsp; GitHub Profile
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <!-- TODO: replace Your Name -->
+        <p>© 2025 Your Name &nbsp;•&nbsp; Built with HTML &amp; CSS &nbsp;•&nbsp; Deployed on Netlify</p>
+    </footer>
+
+</body>
+</html>
