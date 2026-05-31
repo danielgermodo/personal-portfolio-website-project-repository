@@ -3,955 +3,461 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- TODO: Write a one-sentence description of yourself (shown in search results) -->
-    <meta name="description" content="Portfolio of Your Name — IT student and aspiring developer based in the Philippines.">
-    <!-- TODO: Change to your full name -->
-    <title>Your Name — Portfolio</title>
+    <meta name="description" content="Portfolio of Daniel Germodo Grafe — IT student and aspiring developer based in the Philippines.">
+    <title>Daniel Grafe — Portfolio</title>
 
-    <!--
-        INLINE THEME SWITCH  (prevents flash of wrong theme)
-        This tiny script runs before any CSS loads. It reads the user's
-        saved preference or falls back to their OS / browser setting.
+    <!-- 
+        THEME INITIALIZER
+        This prevents the "flash" of white when loading the page in dark mode.
     -->
     <script>
         (function() {
-            var saved = localStorage.getItem('theme');
-            var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-            document.documentElement.setAttribute('data-theme', theme);
+            const savedTheme = localStorage.getItem('theme');
+            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme || systemTheme);
         })();
     </script>
 
     <style>
-        /* ══════════════════════════════════════════════════════
-           DESIGN TOKENS  —  LIGHT THEME  (default)
-           Change these variables to restyle the entire page.
-           ══════════════════════════════════════════════════════ */
+        /* 
+           CSS VARIABLES (Design Tokens)
+           These make it very easy for beginners to change colors and fonts 
+           in one single place without searching through the entire file.
+        */
         :root {
-            /* Colors — all contrast-checked against their backgrounds */
-            --bg:        #F8F7F4;   /* warm off-white page background        */
-            --bg-card:   #FFFFFF;   /* section / card background             */
-            --text:      #1C1C1C;   /* primary text                          */
-            --muted:     #505050;   /* secondary text — 7:1 on white (AAA)   */
-            --accent:    #1B3A5C;   /* navy — headings, buttons              */
-            --gold:      #96681F;   /* amber — labels, links (AA on white)   */
-            --border:    #E4E2DC;   /* dividers and card borders             */
-            --focus:     #2E7AD0;   /* bright blue keyboard focus ring       */
-            --nav-bg:    rgba(248, 247, 244, .92);  /* nav background        */
-            --shadow:    rgba(0, 0, 0, .07);         /* card shadow           */
-            --radius:    8px;
-            --max-width: 960px;
-
-            /*
-             * OFFLINE-SAFE FONT STACKS — sleek, elegant, dyslexia-friendly
-             *
-             * Display (headings): Palatino → Georgia → serif
-             *   Open proportions and calligraphic warmth; never ornate.
-             *
-             * Body (text / nav): Optima → Segoe UI → Candara → sans-serif
-             *   Humanist sans with subtly flared terminals. Exceptional
-             *   clarity; unambiguous l / I distinction for dyslexic readers.
-             *   Segoe UI and Candara are its closest Windows/Linux equivalents.
-             */
-            --font-display: Palatino, 'Palatino Linotype', Georgia, 'Times New Roman', serif;
-            --font-body:    Optima, 'Segoe UI', Candara, 'Trebuchet MS', sans-serif;
+            /* Light Theme Colors */
+            --bg-color: #F9F9F7;        /* Soft off-white to reduce eye strain (ASD friendly) */
+            --card-bg: #FFFFFF;
+            --text-main: #222222;       /* High contrast but not pure black */
+            --text-muted: #555555;      /* Secondary text */
+            --accent-color: #1A365D;    /* Professional Navy Blue */
+            --link-color: #975A16;      /* Elegant Amber/Gold */
+            --border-color: #E2E8F0;
+            --focus-ring: #4299E1;
+            
+            /* Spacing & Borders */
+            --radius: 12px;
+            --container-width: 1000px;
+            
+            /* 
+               FONTS
+               - Headings: A classy, clean Serif for an "elegant" feel.
+               - Body: A highly readable Sans-Serif stack optimized for Dyslexia and ASD.
+               - Added letter-spacing and line-height for accessibility.
+            */
+            --font-heading: "Segoe UI", "Georgia", serif;
+            --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
-
-        /* ══════════════════════════════════════════════════════
-           DESIGN TOKENS  —  DARK THEME
-           ══════════════════════════════════════════════════════ */
+        /* Dark Theme Colors */
         [data-theme="dark"] {
-            --bg:        #1A1D23;   /* dark warm grey background             */
-            --bg-card:   #24282E;   /* card / section background            */
-            --text:      #E4E6EA;   /* off-white primary text               */
-            --muted:     #9CA3AF;   /* secondary text — 10:1 on dark (AAA)  */
-            --accent:    #7BA7D4;   /* lighter navy/blue — headings, btns   */
-            --gold:      #D4A843;   /* amber — labels, links (AA on dark)   */
-            --border:    #353940;   /* subtle dividers and card borders     */
-            --focus:     #5BA3E6;   /* brighter blue keyboard focus ring    */
-            --nav-bg:    rgba(26, 29, 35, .92);  /* nav background          */
-            --shadow:    rgba(0, 0, 0, .35);      /* card shadow            */
+            --bg-color: #121418;
+            --card-bg: #1C1F26;
+            --text-main: #E2E8F0;
+            --text-muted: #A0AEC0;
+            --accent-color: #63B3ED;    /* Lighter blue for dark mode visibility */
+            --link-color: #F6AD55;
+            --border-color: #2D3748;
         }
 
+        /* 
+           BASE STYLES & RESET 
+        */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        html { 
+            scroll-behavior: smooth; 
+        }
 
-        /* ══════════════════════════════════════════════════════
-           RESET & BASE
-           ══════════════════════════════════════════════════════ */
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
         body {
             font-family: var(--font-body);
-            background: var(--bg);
-            color: var(--text);
-            font-size: 17px;
-            line-height: 1.9;
-            word-spacing: 0.04em;        /* slight word spacing — aids dyslexic reading  */
-            overflow-wrap: break-word;   /* prevents long words from overflowing layouts */
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.8;           /* Generous line height for readability */
+            font-size: 18px;            /* Slightly larger base size for clarity */
+            word-spacing: 0.05em;       /* Added spacing helps Dyslexic readers */
+            transition: background-color 0.3s ease, color 0.3s ease;
             -webkit-font-smoothing: antialiased;
-            text-rendering: optimizeLegibility;
-
-            /* Smooth color transitions when toggling themes */
-            transition: background-color .35s ease, color .35s ease;
-        }
-        /* FIX: height:auto ensures images scale correctly when max-width kicks in */
-        img { display: block; max-width: 100%; height: auto; }
-        a   { color: inherit; }
-
-
-        /* ══════════════════════════════════════════════════════
-           SKIP NAVIGATION  (keyboard / screen-reader users)
-           ══════════════════════════════════════════════════════ */
-        .skip-nav {
-            position: absolute; top: -100%; left: 1rem;
-            background: var(--accent); color: #fff;
-            padding: .6rem 1.2rem; border-radius: var(--radius);
-            font-size: .875rem; font-weight: 500; text-decoration: none;
-            z-index: 200; transition: top .15s;
-        }
-        .skip-nav:focus { top: 1rem; }
-
-
-        /* ══════════════════════════════════════════════════════
-           FOCUS RING  (keyboard navigation)
-           ══════════════════════════════════════════════════════ */
-        :focus-visible {
-            outline: 3px solid var(--focus);
-            outline-offset: 3px;
-            border-radius: 3px;
         }
 
-
-        /* ══════════════════════════════════════════════════════
-           REDUCED MOTION  (OS accessibility setting)
-           ══════════════════════════════════════════════════════ */
+        /* Accessibility: Reduced motion preference */
         @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after { transition: none !important; animation: none !important; }
-            html { scroll-behavior: auto; }
+            * { transition: none !important; scroll-behavior: auto !important; }
         }
 
-
-        /* ══════════════════════════════════════════════════════
-           NAVIGATION BAR
-           ══════════════════════════════════════════════════════ */
-        nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            height: 64px; display: flex; align-items: center;
-            justify-content: space-between; padding: 0 2.5rem;
-            background: var(--nav-bg);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            transition: background-color .35s ease, border-color .35s ease;
-        }
-        .nav-brand {
-            font-family: var(--font-display); font-size: 1.2rem; font-weight: 600;
-            color: var(--accent); text-decoration: none; letter-spacing: .01em;
-            transition: color .35s ease;
-        }
-
-        /* Desktop nav links */
-        .nav-links { list-style: none; display: flex; gap: 2.25rem; align-items: center; }
-        .nav-links a {
-            text-decoration: none; color: var(--muted);
-            font-size: .8rem; font-weight: 500;
-            letter-spacing: .12em; text-transform: uppercase;
-            transition: color .25s ease;
-        }
-        /* Underline on hover — visual cue beyond color change alone */
-        .nav-links a:hover {
-            color: var(--accent);
-            text-decoration: underline;
-            text-underline-offset: 4px;
-        }
-
-        /* ── Theme toggle button (desktop) ─────────────── */
-        .theme-toggle {
-            display: inline-flex;
+        /* 
+           IMAGE CONTAINERS & PLACEHOLDERS 
+           Ensures images fill containers and have fallbacks.
+        */
+        .image-container {
+            position: relative;
+            background-color: var(--border-color);
+            border-radius: var(--radius);
+            overflow: hidden;
+            display: flex;
             align-items: center;
             justify-content: center;
-            width: 36px;
-            height: 36px;
-            padding: 0;
-            background: transparent;
-            border: 1.5px solid var(--border);
-            border-radius: 50%;
-            cursor: pointer;
-            color: var(--accent);
-            font-size: 1.15rem;
-            line-height: 1;
-            transition: background-color .25s ease, border-color .25s ease, color .25s ease;
-            flex-shrink: 0;
-        }
-        .theme-toggle:hover {
-            background: var(--accent);
-            color: #fff;
-            border-color: var(--accent);
+            /* Placeholder pattern as fallback */
+            background-image: radial-gradient(var(--text-muted) 0.5px, transparent 0.5px);
+            background-size: 10px 10px;
+            background-opacity: 0.1;
         }
 
-        /* Hamburger button — hidden on desktop, revealed on mobile */
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;         /* Fills the whole container as requested */
+            display: block;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Hide broken images and show the placeholder background instead */
+        .image-container img:not([src]), 
+        .image-container img[src=""] {
+            opacity: 0;
+        }
+
+        /* 
+           LAYOUT COMPONENTS 
+        */
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        section {
+            padding: 5rem 0;
+        }
+
+        h1, h2, h3 {
+            font-family: var(--font-heading);
+            color: var(--accent-color);
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* 
+           NAVIGATION 
+        */
+        nav {
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-color);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            padding: 1rem 0;
+            opacity: 0.98;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            font-family: var(--font-heading);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        /* Mobile Nav Toggle */
         .nav-toggle {
-            display: none;          /* hidden on desktop */
-            flex-direction: column;
-            justify-content: center;
-            gap: 5px;
-            width: 36px;
-            height: 36px;
-            padding: 4px;
+            display: none;
             background: none;
             border: none;
+            font-size: 1.5rem;
             cursor: pointer;
-            border-radius: var(--radius);
-            color: var(--accent);
-            transition: color .35s ease;
-        }
-        /* The three bar spans */
-        .nav-toggle span {
-            display: block;
-            height: 2px;
-            background: currentColor;
-            border-radius: 2px;
-            transition: transform .22s ease, opacity .22s ease;
+            color: var(--text-main);
         }
 
-
-        /* ══════════════════════════════════════════════════════
-           LAYOUT HELPERS  (reused across sections)
-           ══════════════════════════════════════════════════════ */
-        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 2rem; }
-        section    { padding: 108px 0; }
-        /* FIX: aria-hidden added in HTML; purely decorative */
-        hr.divider { border: none; border-top: 1px solid var(--border); transition: border-color .35s ease; }
-
-        /* Small uppercase label above a section heading */
-        .section-label {
-            display: block; font-size: .72rem; font-weight: 500;
-            letter-spacing: .18em; text-transform: uppercase;
-            color: var(--gold); margin-bottom: .8rem;
-            transition: color .35s ease;
-        }
-        /* Default: left-aligned. Contact overrides this below. */
-        .section-title {
-            font-family: var(--font-display);
-            font-size: clamp(1.9rem, 4vw, 2.65rem);
-            font-weight: 600; line-height: 1.2;
-            color: var(--accent); margin-bottom: 3rem;
-            text-align: left;
-            transition: color .35s ease;
+        /* Theme Toggle Button */
+        .theme-btn {
+            background: var(--border-color);
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
         }
 
-        /* Buttons */
-        .btn {
-            display: inline-block; padding: .8rem 1.85rem; border-radius: var(--radius);
-            font-family: var(--font-body); font-size: .9rem; font-weight: 500;
-            text-decoration: none; cursor: pointer; transition: all .22s ease;
-            letter-spacing: .02em;
-        }
-        .btn-primary {
-            background: var(--accent); color: #fff; border: 1.5px solid var(--accent);
-            transition: background-color .25s ease, border-color .25s ease, transform .22s ease, box-shadow .22s ease;
-        }
-        .btn-primary:hover {
-            background: #14304F; border-color: #14304F;
-            transform: translateY(-2px); box-shadow: 0 6px 20px rgba(27,58,92,.2);
-        }
-        .btn-outline {
-            background: transparent; color: var(--accent); border: 1.5px solid var(--accent);
-            transition: background-color .25s ease, color .25s ease, border-color .25s ease, transform .22s ease, box-shadow .22s ease;
-        }
-        .btn-outline:hover {
-            background: var(--accent); color: #fff;
-            transform: translateY(-2px); box-shadow: 0 6px 20px rgba(27,58,92,.2);
-        }
+        .theme-btn:hover { transform: scale(1.1); }
 
-        /* Dark mode button hovers — override to avoid dark-on-dark */
-        [data-theme="dark"] .btn-primary:hover {
-            background: #5A8FC4;
-            border-color: #5A8FC4;
-            box-shadow: 0 6px 20px rgba(123, 167, 212, .3);
-        }
-        [data-theme="dark"] .btn-outline:hover {
-            background: var(--accent);
-            color: #1A1D23;
-            border-color: var(--accent);
-            box-shadow: 0 6px 20px rgba(123, 167, 212, .3);
-        }
-        /* Theme toggle hover in dark mode */
-        [data-theme="dark"] .theme-toggle:hover {
-            background: var(--accent);
-            color: #1A1D23;
-            border-color: var(--accent);
-        }
-
-        /* ══════════════════════════════════════════════════════
-           SECTION 1: HERO
-           ══════════════════════════════════════════════════════ */
+        /* 
+           HERO SECTION 
+        */
         #hero {
-            min-height: 100vh;    /* fallback for older browsers      */
-            min-height: 100dvh;   /* FIX: excludes mobile browser UI  */
-            display: flex; align-items: center; padding-top: 64px;
+            display: flex;
+            align-items: center;
+            min-height: 80vh;
         }
-        .hero-inner { display: flex; align-items: center; gap: 5rem; }
-        .hero-text   { flex: 1; }
 
-        .hero-greeting {
-            display: block; font-size: .85rem; font-weight: 400;
-            letter-spacing: .1em; text-transform: uppercase;
-            color: var(--gold); margin-bottom: 1.1rem;
-            transition: color .35s ease;
-        }
-        .hero-name {
-            font-family: var(--font-display);
-            font-size: clamp(3rem, 8vw, 5.5rem);
-            font-weight: 600; line-height: 1.06;
-            color: var(--accent); letter-spacing: -.01em;
-            margin-bottom: 1.35rem;
-            transition: color .35s ease;
-        }
-        .hero-tagline {
-            font-size: 1.1rem; font-weight: 400;
-            color: var(--muted); line-height: 1.85;
-            max-width: 440px; margin-bottom: 2.5rem;
-            transition: color .35s ease;
-        }
-        .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
-
-        /* Circular profile photo frame */
-        .photo-frame {
-            width: 268px; height: 268px; border-radius: 50%;
-            background: var(--border); border: 4px solid var(--bg-card);
-            box-shadow: 0 0 0 3px var(--accent);
-            overflow: hidden; display: flex; align-items: center;
-            justify-content: center; flex-shrink: 0;
-            transition: background-color .35s ease, border-color .35s ease, box-shadow .35s ease;
-        }
-        .photo-frame .placeholder-icon { width: 90px; height: 90px; opacity: .22; }
-        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
-
-
-        /* ══════════════════════════════════════════════════════
-           SECTION 2: ABOUT  (bio + skills)
-           ══════════════════════════════════════════════════════ */
-        #about { background: var(--bg-card); transition: background-color .35s ease; }
-
-        .about-grid {
-            display: grid; grid-template-columns: 1fr 1fr;
-            gap: 5rem; align-items: start;
-        }
-        .about-bio-text p {
-            color: var(--muted); font-size: 1rem;
-            line-height: 1.95; margin-bottom: 1.15rem;
-            max-width: 52ch;     /* ~65 chars — optimal reading measure   */
-            text-align: left;    /* always left; never justified           */
-            hyphens: auto;       /* cleaner wrapping for long words        */
-            transition: color .35s ease;
-        }
-        .about-bio-text p:last-child { margin-bottom: 0; }
-
-        /* Skill pills */
-        .skills-grid { display: flex; flex-wrap: wrap; gap: .65rem; }
-        .skill-tag {
-            display: inline-block; background: var(--bg);
-            border: 1px solid var(--border); color: var(--text);
-            font-size: .82rem; font-weight: 500; letter-spacing: .025em;
-            padding: .4rem 1.05rem; border-radius: 100px;
-            cursor: default; transition: background-color .25s ease, color .25s ease, border-color .25s ease;
-        }
-        .skill-tag:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
-        /* Dark mode: skill tag hover text contrast */
-        [data-theme="dark"] .skill-tag:hover { color: #1A1D23; }
-
-
-        /* ══════════════════════════════════════════════════════
-           SECTION 3: PROJECTS
-           ══════════════════════════════════════════════════════ */
-        .projects-grid {
+        .hero-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(278px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: 1fr 300px;
+            gap: 3rem;
+            align-items: center;
         }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        .profile-img-container {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%; /* Circular for elegance */
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-decoration: none;
+        }
+
+        /* 
+           PROJECTS 
+        */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
         .project-card {
-            background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: calc(var(--radius) * 1.5); overflow: hidden;
-            display: flex; flex-direction: column;
-            transition: transform .25s ease, box-shadow .25s ease, background-color .35s ease, border-color .35s ease;
-        }
-        .project-card:hover { transform: translateY(-5px); box-shadow: 0 14px 40px var(--shadow); }
-
-        .project-thumbnail {
-            width: 100%; height: 185px;
-            background: linear-gradient(135deg, #D5E5F3 0%, #EBE1D6 100%);
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden; flex-shrink: 0;
-        }
-        .project-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
-        .thumbnail-placeholder {
-            font-size: .72rem; color: #ABABAB;
-            letter-spacing: .1em; text-transform: uppercase;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
         }
 
-        .project-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
-        .project-title {
-            font-family: var(--font-display); font-size: 1.25rem; font-weight: 600;
-            color: var(--text); margin-bottom: .5rem; line-height: 1.3;
-            transition: color .35s ease;
+        .project-card:hover {
+            transform: translateY(-5px);
         }
-        .project-desc {
-            font-size: .92rem; line-height: 1.8;
-            color: var(--muted); flex: 1; margin-bottom: 1rem;
-            text-align: left;
-            transition: color .35s ease;
+
+        .project-img {
+            height: 200px;
+            margin-bottom: 1.5rem;
         }
-        .project-tech { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1.25rem; }
-        .tech-badge {
-            background: var(--bg); color: var(--accent); border: 1px solid var(--border);
-            font-size: .73rem; font-weight: 500; padding: .2rem .65rem;
-            border-radius: 4px; letter-spacing: .03em;
-            transition: background-color .35s ease, color .35s ease, border-color .35s ease;
-        }
-        /* Arrow nudges right on hover; display:inline-block on ::after prevents the
-           arrow from inheriting the link's underline decoration */
-        .project-link {
-            display: inline-flex; align-items: center; gap: .45rem;
-            text-decoration: underline; text-underline-offset: 3px;
-            color: var(--gold); font-size: .875rem; font-weight: 500;
-            transition: gap .2s, color .35s ease; margin-top: auto;
-        }
-        .project-link:hover { gap: .8rem; }
-        .project-link::after { content: '→'; display: inline-block; text-decoration: none; }
 
-
-        /* ══════════════════════════════════════════════════════
-           SECTION 4: CONTACT
-           ══════════════════════════════════════════════════════ */
-        #contact { background: var(--bg-card); text-align: center; transition: background-color .35s ease; }
-        /*
-         * FIX: .section-title has text-align:left as its default rule.
-         * Since the entire contact section is centered, we must explicitly
-         * override the title to match — otherwise it renders left while
-         * the label above it and the intro text below it are both centered.
-         */
-        #contact .section-title { text-align: center; }
-
-        .contact-intro {
-            max-width: 44ch;       /* shorter measure keeps centered text readable */
-            margin: 0 auto 2.75rem;
-            color: var(--muted); font-size: 1.05rem; line-height: 1.9;
-            transition: color .35s ease;
-        }
-        .contact-links { display: flex; justify-content: center; gap: 1.25rem; flex-wrap: wrap; }
-
-
-        /* ══════════════════════════════════════════════════════
-           FOOTER
-           ══════════════════════════════════════════════════════ */
+        /* 
+           FOOTER 
+        */
         footer {
-            padding: 2rem 1rem; text-align: center;
-            font-size: .82rem; line-height: 1.7;
-            color: var(--muted); border-top: 1px solid var(--border);
-            transition: color .35s ease, border-color .35s ease;
+            padding: 3rem 0;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
         }
 
-
-        /* ══════════════════════════════════════════════════════
-           RESPONSIVE  (≤ 768px)
-           ══════════════════════════════════════════════════════ */
+        /* 
+           RESPONSIVE DESIGN 
+        */
         @media (max-width: 768px) {
-
-            /* ── Navigation ────────────────────────────── */
-
-            /* Show hamburger; hide the horizontal nav links */
-            .nav-toggle { display: flex; }
-            .nav-links  { display: none; }
-
-            /*
-             * FIX: Mobile navigation drawer.
-             * When JS adds .nav-open to <nav>, the links drop down
-             * below the nav bar as a full-width vertical menu.
-             */
-            nav.nav-open .nav-links {
-                display: flex;
-                flex-direction: column;
-                gap: 0;
-                position: absolute;
-                top: 64px; left: 0; right: 0;
-                background: var(--nav-bg);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-                border-bottom: 1px solid var(--border);
-                box-shadow: 0 8px 24px var(--shadow);
-                padding: .5rem 2.5rem 1rem;
+            .hero-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
             }
-            nav.nav-open .nav-links li {
-                border-bottom: 1px solid var(--border);
-            }
-            nav.nav-open .nav-links li:last-child { border-bottom: none; }
-            nav.nav-open .nav-links a {
-                display: block;
-                padding: .8rem 0;
-                font-size: .875rem;
-            }
-
-            /* Animate hamburger bars → X when menu is open.
-               Gap = 5px, bar height = 2px → center-to-center = 7px → translateY(±7px) */
-            nav.nav-open .nav-toggle span:nth-child(1) { transform: translateY(7px)  rotate( 45deg); }
-            nav.nav-open .nav-toggle span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-            nav.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-            /* ── Hide theme toggle text label on mobile ── */
-            .theme-toggle-label { display: none; }
-
-            /* ── Hero ──────────────────────────────────── */
-            .hero-inner { flex-direction: column-reverse; gap: 2.5rem; text-align: center; }
-            /*
-             * FIX: hero-tagline now correctly inherits text-align:center from
-             * hero-inner. Previously it was overridden to left while every
-             * surrounding element (greeting, name, buttons) was centered.
-             * about-bio-text paragraphs are kept left in a separate rule below.
-             */
-            .hero-tagline { max-width: 100%; }
-            .hero-cta     { justify-content: center; }
-            .photo-frame  { width: 190px; height: 190px; }
-
-            /* ── About ─────────────────────────────────── */
-            .about-grid       { grid-template-columns: 1fr; gap: 3rem; }
-            /* Bio paragraphs stay left-aligned for readability in single column */
-            .about-bio-text p { max-width: 100%; text-align: left; }
-
-            /* ── Projects ──────────────────────────────── */
-            .projects-grid { grid-template-columns: 1fr; }
-
-            /* ── General ───────────────────────────────── */
-            section        { padding: 80px 0; }
-            .contact-intro { max-width: 100%; }
+            .hero-subtitle { margin: 0 auto 2rem; }
+            .profile-img-container { margin: 0 auto; order: -1; }
+            .nav-links { display: none; } /* Simplified for beginner maintenance */
+            .nav-toggle { display: block; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Skip link: lets keyboard users jump past the nav bar straight to content -->
-    <a href="#main-content" class="skip-nav">Skip to main content</a>
-
-
-    <!-- ══════════════════════════════════════════════════════
-         NAVIGATION BAR
-         ══════════════════════════════════════════════════════ -->
-    <nav aria-label="Main navigation">
-
-        <!-- TODO: Replace "Your Name" with your actual name -->
-        <a href="#hero" class="nav-brand">Your Name</a>
-
-        <!--
-            Theme toggle — always visible.
-            aria-live="polite" lets screen readers announce the label change.
-        -->
-        <button class="theme-toggle"
-                type="button"
-                id="themeToggle"
-                aria-label="Switch to dark mode"
-                aria-live="polite">
-            <span aria-hidden="true" id="themeIcon">🌙</span>
-        </button>
-
-        <!--
-            Hamburger button — only visible on mobile screens.
-            aria-expanded and aria-label are updated by the JS at the bottom.
-        -->
-        <button class="nav-toggle"
-                type="button"
-                aria-label="Open navigation menu"
-                aria-expanded="false"
-                aria-controls="nav-menu">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-        </button>
-
-        <!-- id="nav-menu" ties this list to the hamburger button's aria-controls -->
-        <ul class="nav-links" id="nav-menu" role="list">
-            <li><a href="#about">About</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-
+    <nav>
+        <div class="container nav-content">
+            <div class="logo">DG Grafe</div>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li>
+                    <button id="themeToggle" class="theme-btn" aria-label="Toggle dark mode">
+                        <span id="themeIcon">🌙</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
     </nav>
 
-
-    <main id="main-content">
-
-        <!-- ══════════════════════════════════════════════════════
-             SECTION 1: HERO
-             ══════════════════════════════════════════════════════ -->
-        <section id="hero" aria-labelledby="hero-heading">
-            <div class="container">
-                <div class="hero-inner">
-
-                    <div class="hero-text">
-                        <span class="hero-greeting" aria-hidden="true">👋 Hello, I'm</span>
-
-                        <!-- TODO: Replace with your name. Remove <br> if your name is short. -->
-                        <h1 class="hero-name" id="hero-heading">
-                            <!-- Your<br>Full Name -->
-                            Daniel<br>Germodo<br>Grafe
-                        </h1>
-
-                        <!-- TODO: Update this tagline.
-                             Example: "3rd Year CS Student · Aspiring Software Engineer" -->
-                        <p class="hero-tagline">
-                            2nd Year IT Student &nbsp;·&nbsp; Aspiring Developer
-                            &nbsp;·&nbsp; Based in the Philippines
-                        </p>
-
-                        <div class="hero-cta">
-                            <a href="#projects" class="btn btn-primary">View My Work</a>
-                            <a href="#contact"  class="btn btn-outline">Get In Touch</a>
-                        </div>
-                    </div>
-
-                    <div class="photo-frame" role="img" aria-label="Profile photo placeholder">
-                        <!--
-                            TODO: Add your photo:
-                            1. Save your photo as photo.jpg in the same folder as this file.
-                            2. Delete the <svg> block below.
-                            3. Uncomment the <img> tag and update the alt text.
-                        -->
-                        <!-- <img src="photo.jpg" alt="Profile photo of Your Name" loading="lazy"> -->
-
-                        <img src="personal-picture.jpg"
-                            alt="Profile photo of Your Name"
-                            loading="lazy"
-                            onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg class=%22placeholder-icon%22 viewBox=%220 0 80 80%22 fill=%22none%22 xmlns=%22http://www.w3.org/2000/svg%22 aria-hidden=%22true%22%3E%3Ccircle cx=%2240%22 cy=%2229%22 r=%2217%22 stroke=%22%23666%22 stroke-width=%223%22/%3E%3Cpath d=%22M8 73c0-17.673 14.327-32 32-32s32 14.327 32 32%22 stroke=%22%23666%22 stroke-width=%223%22 stroke-linecap=%22round%22/%3E%3C/svg%3E';">
-
-                        <!--
-                        <svg class="placeholder-icon" viewBox="0 0 80 80" fill="none"
-                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <circle cx="40" cy="29" r="17" stroke="#666" stroke-width="3"/>
-                            <path d="M8 73c0-17.673 14.327-32 32-32s32 14.327 32 32"
-                                  stroke="#666" stroke-width="3" stroke-linecap="round"/>
-                        </svg>
-                        -->
-
-                    </div>
-
+    <main class="container">
+        
+        <!-- HERO SECTION -->
+        <section id="hero">
+            <div class="hero-grid">
+                <div>
+                    <h1 class="hero-title">Daniel Germodo Grafe</h1>
+                    <p class="hero-subtitle">
+                        2nd Year IT Student & Aspiring Developer based in the Philippines. 
+                        Dedicated to building functional, accessible, and elegant digital solutions.
+                    </p>
+                    <a href="#projects" class="btn btn-primary">Explore My Work</a>
+                </div>
+                <div class="image-container profile-img-container">
+                    <!-- If 'personal-picture.jpg' is missing, the grey placeholder pattern shows -->
+                    <img src="personal-picture.jpg" alt="Daniel Grafe Profile" onerror="this.style.opacity='0'">
                 </div>
             </div>
         </section>
 
-        <!-- aria-hidden: purely decorative rule; screen readers skip it -->
-        <hr class="divider" aria-hidden="true">
+        <hr style="border: 0; border-top: 1px solid var(--border-color);">
 
-
-        <!-- ══════════════════════════════════════════════════════
-             SECTION 2: ABOUT
-             ══════════════════════════════════════════════════════ -->
-        <section id="about" aria-labelledby="about-heading">
-            <div class="container">
-                <div class="about-grid">
-
-                    <!-- Left column: bio -->
-                    <div class="about-bio">
-                        <span class="section-label" aria-hidden="true">About Me</span>
-                        <h2 class="section-title" id="about-heading">A Little<br>About Myself</h2>
-                        <div class="about-bio-text">
-                            <!--
-                                TODO: Replace with your own bio (3–5 sentences).
-                                Suggested structure:
-                                  Para 1 — year, course, and school; what you enjoy.
-                                  Para 2 — interests outside class; your goal or aspiration.
-                            -->
-                            <p>
-                                I'm a 2nd-year Information Technology student learning how to build things on the web.
-                                I prefer honing my skills and ideas in my own pace and how to apply them, among other tools,
-                                to solve everyday and practical problems.
-                            </p>
-                            <p>
-                                Outside of coursework, I am silently refining my skills everyday for future situations neeeding it.
-                                My goal is to be useful in the IT and adjacent industries and further my
-                                skills needed to offer goods and services for everyone's benefit.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Right column: skills -->
-                    <div class="about-skills">
-                        <span class="section-label" aria-hidden="true">Skills &amp; Tools</span>
-                        <h2 class="section-title">What I<br>Work With</h2>
-                        <!--
-                            TODO: Update these tags to match your actual skills.
-                            To ADD a skill:    copy any <span class="skill-tag"> line and change the text.
-                            To REMOVE a skill: delete the entire <span> line.
-                        -->
-                        <div class="skills-grid" role="list" aria-label="Skills and tools">
-                            <span class="skill-tag" role="listitem">HTML5</span>
-                            <span class="skill-tag" role="listitem">CSS3</span>
-                            <span class="skill-tag" role="listitem">JavaScript</span>
-                            <span class="skill-tag" role="listitem">Python</span>
-                            <span class="skill-tag" role="listitem">Java</span>
-                            <span class="skill-tag" role="listitem">Git &amp; GitHub</span>
-                            <span class="skill-tag" role="listitem">Figma</span>
-                            <span class="skill-tag" role="listitem">Canva</span>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <hr class="divider" aria-hidden="true">
-
-
-        <!-- ══════════════════════════════════════════════════════
-             SECTION 3: PROJECTS
-             ══════════════════════════════════════════════════════ -->
-        <section id="projects" aria-labelledby="projects-heading">
-            <div class="container">
-                <span class="section-label" aria-hidden="true">My Work</span>
-                <h2 class="section-title" id="projects-heading">Featured Projects</h2>
-
-                <div class="projects-grid">
-
-                    <!-- ── PROJECT CARD 1 ──────────────────────── -->
-                    <!-- TODO: Fill in your first project. -->
-                    <article class="project-card" aria-label="Project: Project Title One">
-
-                        <div class="project-thumbnail">
-                            <!--
-                                TODO: Add a screenshot:
-                                1. Save it as project1.png in the same folder as this file.
-                                2. Delete the <span> line below.
-                                3. Uncomment the <img> tag.
-                            -->
-                            <!-- <img src="project1.png" alt="Screenshot of Project Title One" loading="lazy"> -->
-                            <span class="thumbnail-placeholder" aria-hidden="true">Screenshot</span>
-                        </div>
-
-                        <div class="project-body">
-                            <h3 class="project-title">Project Title One</h3><!-- TODO: project name -->
-                            <p class="project-desc">
-                                A short description of what this project does, the problem
-                                it solves, and something interesting you learned while building it.
-                            </p><!-- TODO: 1–2 sentence description -->
-                            <div class="project-tech" aria-label="Technologies used">
-                                <span class="tech-badge">HTML</span>
-                                <span class="tech-badge">CSS</span>
-                                <span class="tech-badge">JavaScript</span>
-                                <!-- TODO: update or add more tech badges -->
-                            </div>
-                            <!-- TODO: replace # with your GitHub repo or live site URL -->
-                            <a href="#" class="project-link" target="_blank"
-                               rel="noopener noreferrer"
-                               aria-label="View Project Title One (opens in new tab)">
-                                View Project
-                            </a>
-                        </div>
-
-                    </article>
-                    <!-- ── END PROJECT CARD 1 ──────────────────── -->
-
-
-                    <!-- ── PROJECT CARD 2 ──────────────────────── -->
-                    <!-- TODO: Fill in your second project. -->
-                    <article class="project-card" aria-label="Project: Project Title Two">
-
-                        <div class="project-thumbnail">
-                            <!-- <img src="project2.png" alt="Screenshot of Project Title Two" loading="lazy"> -->
-                            <span class="thumbnail-placeholder" aria-hidden="true">Screenshot</span>
-                        </div>
-
-                        <div class="project-body">
-                            <h3 class="project-title">Project Title Two</h3><!-- TODO -->
-                            <p class="project-desc">
-                                A short description of what this project does, the problem
-                                it solves, and something interesting you learned while building it.
-                            </p><!-- TODO -->
-                            <div class="project-tech" aria-label="Technologies used">
-                                <span class="tech-badge">Python</span>
-                                <span class="tech-badge">Git</span>
-                                <!-- TODO: update badges -->
-                            </div>
-                            <a href="#" class="project-link" target="_blank"
-                               rel="noopener noreferrer"
-                               aria-label="View Project Title Two (opens in new tab)">
-                                View Project
-                            </a>
-                        </div>
-
-                    </article>
-                    <!-- ── END PROJECT CARD 2 ──────────────────── -->
-
-
-                    <!-- ── PROJECT CARD 3 ──────────────────────── -->
-                    <!-- TODO: Fill in your third project. -->
-                    <article class="project-card" aria-label="Project: Project Title Three">
-
-                        <div class="project-thumbnail">
-                            <!-- <img src="project3.png" alt="Screenshot of Project Title Three" loading="lazy"> -->
-                            <span class="thumbnail-placeholder" aria-hidden="true">Screenshot</span>
-                        </div>
-
-                        <div class="project-body">
-                            <h3 class="project-title">Project Title Three</h3><!-- TODO -->
-                            <p class="project-desc">
-                                A short description of what this project does, the problem
-                                it solves, and something interesting you learned while building it.
-                            </p><!-- TODO -->
-                            <div class="project-tech" aria-label="Technologies used">
-                                <span class="tech-badge">Java</span>
-                                <span class="tech-badge">Figma</span>
-                                <!-- TODO: update badges -->
-                            </div>
-                            <a href="#" class="project-link" target="_blank"
-                               rel="noopener noreferrer"
-                               aria-label="View Project Title Three (opens in new tab)">
-                                View Project
-                            </a>
-                        </div>
-
-                    </article>
-                    <!-- ── END PROJECT CARD 3 ──────────────────── -->
-
-
-                    <!--
-                        TODO: To add more projects, copy the entire
-                        <article class="project-card"> … </article>
-                        block above and paste it here. Then update all the content inside.
-                    -->
-
-                </div>
-            </div>
-        </section>
-
-        <hr class="divider" aria-hidden="true">
-
-
-        <!-- ══════════════════════════════════════════════════════
-             SECTION 4: CONTACT
-             ══════════════════════════════════════════════════════ -->
-        <section id="contact" aria-labelledby="contact-heading">
-            <div class="container">
-                <span class="section-label" aria-hidden="true">Get In Touch</span>
-                <h2 class="section-title" id="contact-heading">Let's Connect</h2>
-
-                <!-- TODO: Personalize this message if you like. Keep it friendly. -->
-                <p class="contact-intro">
-                    I'm open to internship opportunities, project collaborations, or just
-                    a friendly chat about technology. Feel free to reach out — I'll do my
-                    best to get back to you promptly!
+        <!-- ABOUT SECTION -->
+        <section id="about">
+            <h2 style="text-align: center; margin-bottom: 3rem;">About Me</h2>
+            <div style="max-width: 700px; margin: 0 auto;">
+                <p>
+                    I'm a 2nd-year Information Technology student learning how to build things on the web. 
+                    I prefer honing my skills and ideas at my own pace, focusing on how to apply modern tools 
+                    to solve everyday and practical problems.
                 </p>
+                <p>
+                    Outside of coursework, I am consistently refining my skills for future challenges. 
+                    My goal is to contribute meaningfully to the IT industry by offering goods and services 
+                    that benefit everyone.
+                </p>
+            </div>
+        </section>
 
-                <div class="contact-links">
-                    <!-- TODO: Replace both instances of youremail@example.com with your actual address -->
-                    <a href="/cdn-cgi/l/email-protection#50293f2522353d31393c103528313d203c357e333f3d" class="btn btn-primary" aria-label="Send email to youremail@example.com">
-                        ✉&nbsp; <span class="__cf_email__" data-cfemail="631a0c1611060e020a0f23061b020e130f064d000c0e">[email&#160;protected]</span>
-                    </a>
+        <!-- PROJECTS SECTION -->
+        <section id="projects">
+            <h2 style="text-align: center; margin-bottom: 3rem;">Featured Projects</h2>
+            <div class="project-grid">
+                
+                <!-- PROJECT 1 -->
+                <article class="project-card">
+                    <div class="image-container project-img">
+                        <img src="(Calculator)Screenshot.png" alt="Calculator Project" onerror="this.style.opacity='0'">
+                    </div>
+                    <h3>Calculator Project</h3>
+                    <p>A practical application built to demonstrate core logic and user interface design principles.</p>
+                    <a href="#">View Details →</a>
+                </article>
 
-                    <!-- TODO: Replace yourusername with your actual GitHub username -->
-                    <a href="https://github.com/yourusername" class="btn btn-outline"
-                       target="_blank" rel="noopener noreferrer"
-                       aria-label="Visit GitHub profile (opens in new tab)">
-                        ⌥&nbsp; GitHub Profile
-                    </a>
-                </div>
+                <!-- PROJECT 2 (Placeholder Example) -->
+                <article class="project-card">
+                    <div class="image-container project-img">
+                        <!-- Intentionally missing image to show placeholder robustness -->
+                        <img src="missing-image.png" alt="Project Two" onerror="this.style.opacity='0'">
+                    </div>
+                    <h3>Upcoming Project</h3>
+                    <p>A new endeavor currently in development, focusing on robust functionality and user experience.</p>
+                    <a href="#">Coming Soon →</a>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section id="contact" style="text-align: center;">
+            <h2>Let's Connect</h2>
+            <p>I am open to collaborations and internship opportunities. Feel free to reach out!</p>
+            <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="/cdn-cgi/l/email-protection#9de4f2e8efb0f8f0fcf4f1ddf8e5fcf0edf1f8b3fef2f0" class="btn btn-primary">Send an Email</a>
+                <a href="https://github.com" class="btn" style="border: 1px solid var(--border-color);">GitHub Profile</a>
             </div>
         </section>
 
     </main>
 
-
-    <!-- FOOTER -->
     <footer>
-        <!-- TODO: Replace "Your Name" with your actual name.
-             Also update the year when you deploy a new version. -->
-        <p>© 2025 Your Name &nbsp;·&nbsp; Built with HTML &amp; CSS &nbsp;·&nbsp; Deployed on Netlify</p>
+        <div class="container">
+            <p>&copy; 2026 Daniel Germodo Grafe · Minimalist & Accessible Design</p>
+        </div>
     </footer>
 
-
+    <!-- 
+        SIMPLE SCRIPTS 
+        Kept minimal so beginners can easily understand and modify them.
+    -->
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-        /* ══════════════════════════════════════════════════════
-           THEME TOGGLE  (light / dark)
-           ══════════════════════════════════════════════════════
-           This script handles switching between light and dark
-           themes. It stores the user's preference in localStorage
-           so the choice persists across page loads and visits.
-           ══════════════════════════════════════════════════════ */
-        (function () {
-            var html  = document.documentElement;
-            var btn   = document.getElementById('themeToggle');
-            var icon  = document.getElementById('themeIcon');
+        // --- Theme Toggle Logic ---
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const htmlElement = document.documentElement;
 
-            /* Update the button label and icon to match the current theme */
-            function syncUI(theme) {
-                if (theme === 'dark') {
-                    btn.setAttribute('aria-label', 'Switch to light mode');
-                    icon.textContent = '☀️';
-                } else {
-                    btn.setAttribute('aria-label', 'Switch to dark mode');
-                    icon.textContent = '🌙';
-                }
-            }
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update icon
+            themeIcon.textContent = newTheme === 'light' ? '🌙' : '☀️';
+        });
 
-            /* Set the theme and update everything */
-            function setTheme(theme) {
-                html.setAttribute('data-theme', theme);
-                localStorage.setItem('theme', theme);
-                syncUI(theme);
-            }
-
-            /* Initialise UI to match the theme that the inline <script> already set */
-            syncUI(html.getAttribute('data-theme'));
-
-            /* Toggle on button click */
-            if (btn) {
-                btn.addEventListener('click', function () {
-                    var current = html.getAttribute('data-theme');
-                    setTheme(current === 'dark' ? 'light' : 'dark');
-                });
-            }
-        })();
-
-
-        /* ══════════════════════════════════════════════════════
-           MOBILE NAVIGATION TOGGLE
-           ══════════════════════════════════════════════════════
-           This script powers the hamburger menu on small screens.
-           It adds/removes the class "nav-open" on the <nav> element.
-           The CSS uses that class to:
-             • Show / hide the dropdown link list
-             • Animate the three bars into an X icon
-
-           No external libraries needed — this is plain JavaScript.
-           ══════════════════════════════════════════════════════ */
-        (function () {
-            var toggle = document.querySelector('.nav-toggle');
-            var nav    = document.querySelector('nav');
-
-            if (!toggle || !nav) return;  /* safety check — prevents errors */
-
-            /* Open or close the menu when the hamburger button is clicked */
-            toggle.addEventListener('click', function () {
-                var isOpen = nav.classList.toggle('nav-open');
-                toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-                toggle.setAttribute('aria-label',
-                    isOpen ? 'Close navigation menu' : 'Open navigation menu');
-            });
-
-            /* Close the menu automatically when any nav link is tapped */
-            document.querySelectorAll('.nav-links a').forEach(function (link) {
-                link.addEventListener('click', function () {
-                    nav.classList.remove('nav-open');
-                    toggle.setAttribute('aria-expanded', 'false');
-                    toggle.setAttribute('aria-label', 'Open navigation menu');
-                });
-            });
-
-            /* Close the menu when the user taps anywhere outside of the nav bar */
-            document.addEventListener('click', function (event) {
-                if (nav.classList.contains('nav-open') && !nav.contains(event.target)) {
-                    nav.classList.remove('nav-open');
-                    toggle.setAttribute('aria-expanded', 'false');
-                    toggle.setAttribute('aria-label', 'Open navigation menu');
-                }
-            });
-        }());
+        // Initialize icon on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            themeIcon.textContent = currentTheme === 'light' ? '🌙' : '☀️';
+        });
     </script>
-
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a043dc9f3fbc7c18',t:'MTc4MDIwODMxMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a04427250993a0f1',t:'MTc4MDIxMTM2NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
