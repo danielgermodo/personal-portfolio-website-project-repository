@@ -6,458 +6,597 @@
     <meta name="description" content="Portfolio of Daniel Germodo Grafe — IT student and aspiring developer based in the Philippines.">
     <title>Daniel Grafe — Portfolio</title>
 
-    <!-- 
-        THEME INITIALIZER
-        This prevents the "flash" of white when loading the page in dark mode.
+    <!--
+        THEME INITIALIZER (Prevents flash of wrong theme)
+        This tiny script runs before the page loads. It checks for a saved theme,
+        or falls back to the user's system preferences (dark or light mode).
     -->
     <script>
         (function() {
-            const savedTheme = localStorage.getItem('theme');
-            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme || systemTheme);
+            var saved = localStorage.getItem('theme');
+            var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
         })();
     </script>
 
     <style>
-        /* 
-           CSS VARIABLES (Design Tokens)
-           These make it very easy for beginners to change colors and fonts 
-           in one single place without searching through the entire file.
-        */
+        /* ==========================================================================
+           DESIGN TOKENS - LIGHT THEME (Default)
+           These variables control the entire look of the site. Easy to change!
+           ========================================================================== */
         :root {
-            /* Light Theme Colors */
-            --bg-color: #F9F9F7;        /* Soft off-white to reduce eye strain (ASD friendly) */
-            --card-bg: #FFFFFF;
-            --text-main: #222222;       /* High contrast but not pure black */
-            --text-muted: #555555;      /* Secondary text */
-            --accent-color: #1A365D;    /* Professional Navy Blue */
-            --link-color: #975A16;      /* Elegant Amber/Gold */
-            --border-color: #E2E8F0;
-            --focus-ring: #4299E1;
-            
-            /* Spacing & Borders */
-            --radius: 12px;
-            --container-width: 1000px;
-            
-            /* 
-               FONTS
-               - Headings: A classy, clean Serif for an "elegant" feel.
-               - Body: A highly readable Sans-Serif stack optimized for Dyslexia and ASD.
-               - Added letter-spacing and line-height for accessibility.
-            */
-            --font-heading: "Segoe UI", "Georgia", serif;
-            --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --bg:        #F8F7F4;   /* Soft, warm off-white background (ASD friendly) */
+            --bg-card:   #FFFFFF;   /* Section/card background */
+            --text:      #1C1C1C;   /* Primary text color (High contrast) */
+            --muted:     #505050;   /* Secondary text color */
+            --accent:    #1A365D;   /* Professional Navy Blue for headings */
+            --gold:      #96681F;   /* Elegant Amber for links and accents */
+            --border:    #E4E2DC;   /* Subtle borders */
+            --focus:     #2E7AD0;   /* Bright blue for keyboard focus */
+            --nav-bg:    rgba(248, 247, 244, 0.95); /* Semi-transparent nav */
+            --shadow:    0 4px 12px rgba(0, 0, 0, 0.05); /* Soft card shadow */
+            --badge-bg:  #EDF2F7;
+            --badge-txt: #2D3748;
+            --radius:    10px;
+            --max-width: 960px;
+
+            /*
+             * FONTS - Accessible, sleek, and elegant
+             * Headings: Serif stack for a professional, elegant feel.
+             * Body: Highly readable, open-proportioned sans-serif stack.
+             * Excellent for dyslexia, avoiding ambiguous characters (like I and l).
+             */
+            --font-display: Palatino, 'Palatino Linotype', Georgia, 'Times New Roman', serif;
+            --font-body:    Optima, 'Segoe UI', Candara, 'Trebuchet MS', sans-serif;
         }
 
-        /* Dark Theme Colors */
+        /* ==========================================================================
+           DESIGN TOKENS - DARK THEME
+           These variables override the light theme when dark mode is active.
+           ========================================================================== */
         [data-theme="dark"] {
-            --bg-color: #121418;
-            --card-bg: #1C1F26;
-            --text-main: #E2E8F0;
-            --text-muted: #A0AEC0;
-            --accent-color: #63B3ED;    /* Lighter blue for dark mode visibility */
-            --link-color: #F6AD55;
-            --border-color: #2D3748;
+            --bg:        #121418;   /* Deep dark gray, easier on the eyes than pure black */
+            --bg-card:   #1C1F26;   
+            --text:      #E4E6EA;   /* Soft off-white text */
+            --muted:     #9CA3AF;   
+            --accent:    #63B3ED;   /* Light blue for visibility on dark backgrounds */
+            --gold:      #F6AD55;   /* Bright amber */
+            --border:    #2D3748;   
+            --focus:     #5BA3E6;   
+            --nav-bg:    rgba(18, 20, 24, 0.95);
+            --shadow:    0 4px 12px rgba(0, 0, 0, 0.35);
+            --badge-bg:  #2D3748;
+            --badge-txt: #E2E8F0;
         }
 
-        /* 
-           BASE STYLES & RESET 
-        */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        /* ==========================================================================
+           BASE STYLES & RESET
+           ========================================================================== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
         
-        html { 
-            scroll-behavior: smooth; 
-        }
-
         body {
             font-family: var(--font-body);
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.8;           /* Generous line height for readability */
-            font-size: 18px;            /* Slightly larger base size for clarity */
-            word-spacing: 0.05em;       /* Added spacing helps Dyslexic readers */
-            transition: background-color 0.3s ease, color 0.3s ease;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 17px;
+            line-height: 1.8;
+            word-spacing: 0.05em; /* Slight extra spacing aids dyslexic readers */
+            overflow-wrap: break-word;
             -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            transition: background-color 0.35s ease, color 0.35s ease;
         }
 
-        /* Accessibility: Reduced motion preference */
+        img { display: block; max-width: 100%; height: auto; border-radius: var(--radius); }
+        a { color: inherit; text-decoration: none; transition: color 0.2s ease; }
+        
+        /* Keyboard Navigation Focus */
+        :focus-visible {
+            outline: 3px solid var(--focus);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        /* Reduced Motion Accessibility */
         @media (prefers-reduced-motion: reduce) {
-            * { transition: none !important; scroll-behavior: auto !important; }
+            *, *::before, *::after { transition: none !important; animation: none !important; }
+            html { scroll-behavior: auto; }
         }
 
-        /* 
-           IMAGE CONTAINERS & PLACEHOLDERS 
-           Ensures images fill containers and have fallbacks.
-        */
-        .image-container {
-            position: relative;
-            background-color: var(--border-color);
-            border-radius: var(--radius);
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            /* Placeholder pattern as fallback */
-            background-image: radial-gradient(var(--text-muted) 0.5px, transparent 0.5px);
-            background-size: 10px 10px;
-            background-opacity: 0.1;
+        /* Skip to content link for screen readers */
+        .skip-nav {
+            position: absolute; top: -100%; left: 1rem;
+            background: var(--accent); color: #fff;
+            padding: 0.6rem 1.2rem; border-radius: var(--radius);
+            font-size: 0.875rem; font-weight: bold; z-index: 200;
         }
+        .skip-nav:focus { top: 1rem; }
 
-        .image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;         /* Fills the whole container as requested */
-            display: block;
-            transition: opacity 0.3s ease;
-        }
+        /* ==========================================================================
+           LAYOUT HELPERS
+           ========================================================================== */
+        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 1.5rem; }
+        section { padding: 5rem 0; }
+        
+        h1, h2, h3 { font-family: var(--font-display); color: var(--accent); line-height: 1.3; }
+        h1 { font-size: clamp(2.5rem, 5vw, 3.5rem); margin-bottom: 1rem; }
+        h2 { font-size: 2.2rem; margin-bottom: 2rem; text-align: center; }
+        h3 { font-size: 1.4rem; margin-bottom: 0.8rem; }
+        p { color: var(--muted); margin-bottom: 1.2rem; }
 
-        /* Hide broken images and show the placeholder background instead */
-        .image-container img:not([src]), 
-        .image-container img[src=""] {
-            opacity: 0;
-        }
-
-        /* 
-           LAYOUT COMPONENTS 
-        */
-        .container {
-            max-width: var(--container-width);
+        /* Divider line */
+        hr.divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            max-width: 100px;
             margin: 0 auto;
-            padding: 0 1.5rem;
         }
 
-        section {
-            padding: 5rem 0;
-        }
-
-        h1, h2, h3 {
-            font-family: var(--font-heading);
-            color: var(--accent-color);
-            line-height: 1.2;
-            margin-bottom: 1rem;
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            border-radius: var(--radius);
             font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #ffffff !important;
+            border: 2px solid var(--accent);
+        }
+        .btn-primary:hover {
+            background: transparent;
+            color: var(--accent) !important;
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--accent);
+            color: var(--accent);
         }
 
-        p {
-            margin-bottom: 1.5rem;
-            color: var(--text-muted);
-        }
-
-        a {
-            color: var(--link-color);
-            text-decoration: none;
-            transition: opacity 0.2s;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        /* 
-           NAVIGATION 
-        */
+        /* ==========================================================================
+           NAVIGATION BAR
+           ========================================================================== */
         nav {
-            position: sticky;
-            top: 0;
-            background-color: var(--bg-color);
-            border-bottom: 1px solid var(--border-color);
-            z-index: 1000;
-            padding: 1rem 0;
-            opacity: 0.98;
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            height: 70px; display: flex; align-items: center;
+            background: var(--nav-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            transition: background-color 0.35s ease;
         }
-
+        
         .nav-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; justify-content: space-between; align-items: center; width: 100%;
         }
 
-        .logo {
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: var(--accent-color);
-            font-family: var(--font-heading);
+        .nav-brand {
+            font-family: var(--font-display); font-size: 1.3rem; font-weight: bold;
+            color: var(--accent); letter-spacing: 0.02em;
         }
 
         .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-            align-items: center;
+            list-style: none; display: flex; gap: 2rem; align-items: center;
         }
 
         .nav-links a {
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-main);
-            font-weight: 500;
+            color: var(--text); font-size: 0.9rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.1em;
         }
-
-        /* Mobile Nav Toggle */
-        .nav-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-main);
-        }
+        
+        .nav-links a:hover { color: var(--gold); }
 
         /* Theme Toggle Button */
-        .theme-btn {
-            background: var(--border-color);
-            border: none;
-            padding: 0.5rem;
-            border-radius: 50%;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s;
+        .theme-toggle {
+            background: transparent; border: 1.5px solid var(--border);
+            border-radius: 50%; width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--text); font-size: 1.2rem;
+            transition: all 0.2s ease;
+        }
+        .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* Mobile Hamburger Toggle */
+        .nav-toggle {
+            display: none; flex-direction: column; justify-content: center; gap: 6px;
+            background: none; border: none; cursor: pointer; padding: 4px;
+            width: 36px; height: 36px; color: var(--accent);
+            z-index: 101;
+        }
+        .nav-toggle span {
+            display: block; height: 2px; width: 100%;
+            background: currentColor; border-radius: 2px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
-        .theme-btn:hover { transform: scale(1.1); }
-
-        /* 
-           HERO SECTION 
-        */
+        /* ==========================================================================
+           HERO SECTION
+           ========================================================================== */
         #hero {
-            display: flex;
-            align-items: center;
-            min-height: 80vh;
+            min-height: 85vh; display: flex; align-items: center; padding-top: 100px;
         }
-
         .hero-grid {
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 3rem;
-            align-items: center;
+            display: grid; grid-template-columns: 1fr 300px; gap: 4rem; align-items: center;
         }
-
-        .hero-title {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            margin-bottom: 1.5rem;
-        }
-
         .hero-subtitle {
-            font-size: 1.25rem;
-            margin-bottom: 2rem;
-            max-width: 600px;
+            font-size: 1.2rem; margin-bottom: 2rem; max-width: 600px;
+        }
+        
+        /* Image placeholder logic */
+        .image-container {
+            position: relative; background: var(--border); border-radius: 50%;
+            overflow: hidden; width: 300px; height: 300px;
+            display: flex; align-items: center; justify-content: center;
+            background-image: radial-gradient(var(--muted) 1px, transparent 1px);
+            background-size: 15px 15px;
+        }
+        .image-container img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: opacity 0.3s ease;
         }
 
-        .profile-img-container {
-            width: 300px;
-            height: 300px;
-            border-radius: 50%; /* Circular for elegance */
+        /* ==========================================================================
+           ABOUT & SKILLS SECTION
+           ========================================================================== */
+        .about-content { max-width: 800px; margin: 0 auto; text-align: center; }
+        
+        .skills-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem; margin-top: 3rem; text-align: left;
+        }
+        
+        .skill-category {
+            background: var(--bg-card); padding: 1.5rem; border-radius: var(--radius);
+            border: 1px solid var(--border); box-shadow: var(--shadow);
         }
 
-        .btn {
-            display: inline-block;
-            padding: 0.8rem 2rem;
-            border-radius: var(--radius);
-            font-weight: 600;
-            transition: all 0.2s;
-            cursor: pointer;
-            border: none;
-            font-size: 1rem;
+        /* Technology Badges */
+        .tech-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+        .tech-badge {
+            background: var(--badge-bg); color: var(--badge-txt);
+            padding: 0.4rem 0.8rem; border-radius: 20px;
+            font-size: 0.85rem; font-weight: 600; letter-spacing: 0.02em;
         }
 
-        .btn-primary {
-            background-color: var(--accent-color);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            text-decoration: none;
-        }
-
-        /* 
-           PROJECTS 
-        */
+        /* ==========================================================================
+           PROJECTS SECTION
+           ========================================================================== */
         .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem; margin-top: 3rem;
         }
-
+        
         .project-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 1.5rem;
-            transition: transform 0.3s ease;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); overflow: hidden;
+            box-shadow: var(--shadow); transition: transform 0.3s ease;
+            display: flex; flex-direction: column;
         }
+        .project-card:hover { transform: translateY(-5px); }
 
-        .project-card:hover {
-            transform: translateY(-5px);
+        .project-thumbnail {
+            height: 200px; background: var(--border); display: flex;
+            align-items: center; justify-content: center; color: var(--muted);
+            font-size: 0.9rem; border-radius: 0;
         }
-
-        .project-img {
-            height: 200px;
-            margin-bottom: 1.5rem;
+        .project-thumbnail img { border-radius: 0; width: 100%; height: 100%; object-fit: cover; }
+        
+        .project-body { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; }
+        .project-body .tech-tags { margin-bottom: 1.5rem; margin-top: auto; }
+        
+        .project-link {
+            color: var(--gold); font-weight: 600; display: inline-flex;
+            align-items: center; gap: 0.5rem; margin-top: auto;
         }
+        .project-link:hover { text-decoration: underline; }
 
-        /* 
-           FOOTER 
-        */
+        /* ==========================================================================
+           CONTACT & FOOTER
+           ========================================================================== */
+        .contact-content { text-align: center; max-width: 600px; margin: 0 auto; }
+        .contact-links { display: flex; justify-content: center; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
+        
         footer {
-            padding: 3rem 0;
-            border-top: 1px solid var(--border-color);
-            text-align: center;
-            font-size: 0.9rem;
-            color: var(--text-muted);
+            text-align: center; padding: 2rem 0; border-top: 1px solid var(--border);
+            color: var(--muted); font-size: 0.9rem; margin-top: 2rem;
         }
 
-        /* 
-           RESPONSIVE DESIGN 
-        */
+        /* ==========================================================================
+           MOBILE RESPONSIVENESS
+           ========================================================================== */
         @media (max-width: 768px) {
-            .hero-grid {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
+            .hero-grid { grid-template-columns: 1fr; text-align: center; gap: 2rem; }
             .hero-subtitle { margin: 0 auto 2rem; }
-            .profile-img-container { margin: 0 auto; order: -1; }
-            .nav-links { display: none; } /* Simplified for beginner maintenance */
-            .nav-toggle { display: block; }
+            .image-container { margin: 0 auto; order: -1; width: 250px; height: 250px; }
+            
+            /* Mobile Navigation */
+            .nav-toggle { display: flex; }
+            .nav-links {
+                position: absolute; top: 70px; left: 0; right: 0;
+                background: var(--bg-card); flex-direction: column;
+                padding: 2rem; gap: 1.5rem; border-bottom: 1px solid var(--border);
+                box-shadow: var(--shadow);
+                transform: translateY(-150%); opacity: 0; pointer-events: none;
+                transition: transform 0.3s ease, opacity 0.3s ease;
+            }
+            nav.nav-open .nav-links {
+                transform: translateY(0); opacity: 1; pointer-events: auto;
+            }
+            
+            /* Hamburger to X animation */
+            nav.nav-open .nav-toggle span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            nav.nav-open .nav-toggle span:nth-child(2) { opacity: 0; }
+            nav.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
         }
     </style>
 </head>
 <body>
 
-    <nav>
+    <!-- Skip navigation for accessibility -->
+    <a href="#main-content" class="skip-nav">Skip to main content</a>
+
+    <!-- NAVIGATION -->
+    <nav aria-label="Main navigation">
         <div class="container nav-content">
-            <div class="logo">DG Grafe</div>
+            <a href="#" class="nav-brand" aria-label="Home">Daniel Germodo</a>
+            
             <ul class="nav-links">
                 <li><a href="#about">About</a></li>
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#contact">Contact</a></li>
                 <li>
-                    <button id="themeToggle" class="theme-btn" aria-label="Toggle dark mode">
-                        <span id="themeIcon">🌙</span>
+                    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+                        <span id="themeIcon">☀️</span>
                     </button>
                 </li>
             </ul>
+
+            <!-- Mobile menu button -->
+            <button class="nav-toggle" aria-label="Open navigation menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
 
-    <main class="container">
+    <main id="main-content">
         
         <!-- HERO SECTION -->
         <section id="hero">
-            <div class="hero-grid">
+            <div class="container hero-grid">
                 <div>
-                    <h1 class="hero-title">Daniel Germodo Grafe</h1>
+                    <h1>Daniel Germodo Grafe</h1>
                     <p class="hero-subtitle">
                         2nd Year IT Student & Aspiring Developer based in the Philippines. 
                         Dedicated to building functional, accessible, and elegant digital solutions.
                     </p>
                     <a href="#projects" class="btn btn-primary">Explore My Work</a>
                 </div>
-                <div class="image-container profile-img-container">
-                    <!-- If 'personal-picture.jpg' is missing, the grey placeholder pattern shows -->
-                    <img src="personal-picture.jpg" alt="Daniel Grafe Profile" onerror="this.style.opacity='0'">
+                <div class="image-container" aria-label="Profile Picture of Daniel Grafe">
+                    <!-- The 'onerror' hides a broken image so the clean placeholder pattern shows -->
+                    <img src="personal-picture.jpg" alt="Daniel Grafe" onerror="this.style.opacity='0'">
                 </div>
             </div>
         </section>
 
-        <hr style="border: 0; border-top: 1px solid var(--border-color);">
+        <hr class="divider" aria-hidden="true">
 
-        <!-- ABOUT SECTION -->
+        <!-- ABOUT & SKILLS SECTION -->
         <section id="about">
-            <h2 style="text-align: center; margin-bottom: 3rem;">About Me</h2>
-            <div style="max-width: 700px; margin: 0 auto;">
-                <p>
-                    I'm a 2nd-year Information Technology student learning how to build things on the web. 
-                    I prefer honing my skills and ideas at my own pace, focusing on how to apply modern tools 
-                    to solve everyday and practical problems.
-                </p>
-                <p>
-                    Outside of coursework, I am gradually refining my skills for future challenges. 
-                    My goal is to contribute meaningfully to the IT industry by offering goods and services 
-                    that benefit everyone.
-                </p>
+            <div class="container">
+                <h2>About Me</h2>
+                
+                <div class="about-content">
+                    <p>
+                        I'm a 2nd-year Information Technology student learning how to build things on the web. 
+                        I prefer honing my skills and ideas at my own pace, focusing on how to apply modern tools 
+                        to solve everyday and practical problems.
+                    </p>
+                    <p>
+                        Outside of coursework, I am gradually refining my skills for future challenges. 
+                        My goal is to contribute meaningfully to the IT industry by offering goods and services 
+                        that benefit everyone.
+                    </p>
+                </div>
+
+                <!-- Skills Section (Requested Feature) -->
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <h3>Computer Languages</h3>
+                        <p style="font-size: 0.9rem; margin-bottom: 0;">Languages I use:</p>
+                        <div class="tech-tags">
+                            <span class="tech-badge">HTML5</span>
+                            <span class="tech-badge">CSS3</span>
+                            <span class="tech-badge">JavaScript</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <h3>Development Tools</h3>
+                        <p style="font-size: 0.9rem; margin-bottom: 0;">Tools that help my workflow:</p>
+                        <div class="tech-tags">
+                            <span class="tech-badge">Git & GitHub</span>
+                            <span class="tech-badge">VS Code</span>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </section>
+
+        <hr class="divider" aria-hidden="true">
 
         <!-- PROJECTS SECTION -->
         <section id="projects">
-            <h2 style="text-align: center; margin-bottom: 3rem;">Featured Projects</h2>
-            <div class="project-grid">
+            <div class="container">
+                <h2>Featured Projects</h2>
                 
-                <!-- PROJECT 1 -->
-                <article class="project-card">
-                    <div class="image-container project-img">
-                        <img src="(Calculator)Screenshot.png" alt="Calculator Project" onerror="this.style.opacity='0'">
-                    </div>
-                    <h3>Calculator Project</h3>
-                    <p>A basic calculator I made sometime. Too rudimentary for its function, but it works. Source code available in its Github repository.</p>
-                    <a href="https://github.com/danielgermodo/my-calculator-project">Click this link to go to its GitHub repository→</a>
-                </article>
+                <div class="project-grid">
+                    
+                    <!-- PROJECT 1 -->
+                    <article class="project-card" aria-label="Project: Calculator">
+                        <div class="project-thumbnail">
+                            <img src="(Calculator)Screenshot.png" alt="Screenshot of Calculator Project" onerror="this.style.opacity='0'; this.parentElement.innerHTML='Screenshot Placeholder';">
+                        </div>
+                        <div class="project-body">
+                            <h3>Calculator Project</h3>
+                            <p>A basic calculator I made to practice logic and interface design. While rudimentary in function, it works reliably and served as a great learning experience.</p>
+                            
+                            <!-- Project Technologies (Requested Feature) -->
+                            <div class="tech-tags" aria-label="Technologies used">
+                                <span class="tech-badge">HTML</span>
+                                <span class="tech-badge">CSS</span>
+                                <span class="tech-badge">JavaScript</span>
+                            </div>
 
-                <!-- PROJECT 2 (Placeholder Example) -->
-                <article class="project-card">
-                    <div class="image-container project-img">
-                        <!-- Intentionally missing image to show placeholder robustness -->
-                        <img src="missing-image.png" alt="Project Two" onerror="this.style.opacity='0'">
-                    </div>
-                    <h3>Upcoming Project</h3>
-                    <p>In development for now.</p>
-                    <a href="#">Coming Soon →</a>
-                </article>
+                            <a href="https://github.com/danielgermodo/my-calculator-project" class="project-link" target="_blank" rel="noopener noreferrer">
+                                View Repository <span>→</span>
+                            </a>
+                        </div>
+                    </article>
 
+                    <!-- PROJECT 2 -->
+                    <article class="project-card" aria-label="Project: Upcoming Project">
+                        <div class="project-thumbnail">
+                            <!-- Missing image will automatically show the gray box -->
+                            <img src="missing-image.png" alt="Upcoming Project" onerror="this.style.opacity='0'; this.parentElement.innerHTML='In Development';">
+                        </div>
+                        <div class="project-body">
+                            <h3>Upcoming Project</h3>
+                            <p>In development for now.</p>
+                            
+                            <!-- Project Technologies -->
+                            <div class="tech-tags" aria-label="Technologies used">
+                                <span class="tech-badge">Figma</span>
+                                <span class="tech-badge">Node.js</span>
+                            </div>
+
+                            <a href="#" class="project-link">
+                                Coming Soon <span>→</span>
+                            </a>
+                        </div>
+                    </article>
+
+                </div>
             </div>
         </section>
 
+        <hr class="divider" aria-hidden="true">
+
         <!-- CONTACT SECTION -->
-        <section id="contact" style="text-align: center;">
-            <h2>Let's Connect</h2>
-            <p>I am open to collaborations and internship opportunities. Feel free to reach out!</p>
-            <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                <a href="/cdn-cgi/l/email-protection#9de4f2e8efb0f8f0fcf4f1ddf8e5fcf0edf1f8b3fef2f0" class="btn btn-primary">Send an Email</a>
-                <a href="https://github.com/danielgermodo" class="btn" style="border: 1px solid var(--border-color);">GitHub Profile</a>
+        <section id="contact">
+            <div class="container contact-content">
+                <h2>Let's Connect</h2>
+                <p>
+                    I am open to collaborations, internship opportunities, or just a friendly chat about technology. 
+                    Feel free to reach out—I'll do my best to respond promptly!
+                </p>
+                
+                <div class="contact-links">
+                    <!-- Replace the href with an actual mailto: email link -->
+                    <a href="/cdn-cgi/l/email-protection#84e7ebeaf0e5e7f0c4e1fce5e9f4e8e1aae7ebe9" class="btn btn-primary" aria-label="Send an Email">
+                        Send an Email
+                    </a>
+                    <a href="https://github.com/danielgermodo" class="btn btn-outline" target="_blank" rel="noopener noreferrer" aria-label="Visit GitHub Profile">
+                        GitHub Profile
+                    </a>
+                </div>
             </div>
         </section>
 
     </main>
 
+    <!-- FOOTER -->
     <footer>
         <div class="container">
-            <p>&copy; 2026 Daniel Germodo Grafe · Minimalist & Accessible Design</p>
+            <p>&copy; 2026 Daniel Germodo Grafe &nbsp;·&nbsp; Minimalist & Accessible Design</p>
         </div>
     </footer>
 
-    <!-- 
-        SIMPLE SCRIPTS 
-        Kept minimal so beginners can easily understand and modify them.
+    <!--
+        INTERACTIVE SCRIPTS
+        These are pure JavaScript logic blocks handling the theme and mobile menu.
+        They are kept simple so beginners can easily read and modify them.
     -->
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-        // --- Theme Toggle Logic ---
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
-        const htmlElement = document.documentElement;
+        // ----------------------------------------------------------------------
+        // 1. THEME TOGGLE LOGIC
+        // ----------------------------------------------------------------------
+        (function() {
+            var html = document.documentElement;
+            var themeBtn = document.getElementById('themeToggle');
+            var themeIcon = document.getElementById('themeIcon');
 
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = htmlElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
-            htmlElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            
-            // Update icon
-            themeIcon.textContent = newTheme === 'light' ? '🌙' : '☀️';
-        });
+            // Set the correct icon based on current theme
+            function updateIcon(theme) {
+                if (theme === 'dark') {
+                    themeIcon.textContent = '☀️';
+                    themeBtn.setAttribute('aria-label', 'Switch to light mode');
+                } else {
+                    themeIcon.textContent = '🌙';
+                    themeBtn.setAttribute('aria-label', 'Switch to dark mode');
+                }
+            }
 
-        // Initialize icon on load
-        window.addEventListener('DOMContentLoaded', () => {
-            const currentTheme = htmlElement.getAttribute('data-theme');
-            themeIcon.textContent = currentTheme === 'light' ? '🌙' : '☀️';
-        });
+            // Initialize the icon on load
+            var currentTheme = html.getAttribute('data-theme');
+            updateIcon(currentTheme);
+
+            // Toggle function
+            if(themeBtn) {
+                themeBtn.addEventListener('click', function() {
+                    var oldTheme = html.getAttribute('data-theme');
+                    var newTheme = oldTheme === 'dark' ? 'light' : 'dark';
+                    
+                    html.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                    updateIcon(newTheme);
+                });
+            }
+        })();
+
+        // ----------------------------------------------------------------------
+        // 2. MOBILE NAVIGATION LOGIC
+        // ----------------------------------------------------------------------
+        (function() {
+            var nav = document.querySelector('nav');
+            var toggleBtn = document.querySelector('.nav-toggle');
+            var navLinks = document.querySelectorAll('.nav-links a');
+
+            if(!nav || !toggleBtn) return;
+
+            // Open/close menu on hamburger click
+            toggleBtn.addEventListener('click', function() {
+                var isOpen = nav.classList.toggle('nav-open');
+                toggleBtn.setAttribute('aria-expanded', isOpen);
+            });
+
+            // Close menu when a link is clicked
+            navLinks.forEach(function(link) {
+                link.addEventListener('click', function() {
+                    nav.classList.remove('nav-open');
+                    toggleBtn.setAttribute('aria-expanded', 'false');
+                });
+            });
+
+            // Close menu if user clicks outside of it
+            document.addEventListener('click', function(event) {
+                if (nav.classList.contains('nav-open') && !nav.contains(event.target)) {
+                    nav.classList.remove('nav-open');
+                    toggleBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        })();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a04427250993a0f1',t:'MTc4MDIxMTM2NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a044947e1db9dda0',t:'MTc4MDIxNTg0Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
